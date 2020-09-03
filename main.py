@@ -18,12 +18,11 @@ PASSWORD = config("DATABASE_PASSWORD")
 try:
     GRAPH = Graph(HOSTNAME, auth=(USERNAME, PASSWORD))
     DB_FLAG = 0
+    # Deleting all the existing Nodes
+    GRAPH.delete_all()
 except:
     DB_FLAG = 1
 
-# Deleting the existing Nodes in the Database  
-print(DB_FLAG)
-GRAPH.delete_all()
 # Adding Questions and their individual Labels
 QUESTION_LABEL = 'Question'
 
@@ -59,6 +58,15 @@ QUESTION_4 = {
     }
 }
 
+question1_node = Node(QUESTION_LABEL, **QUESTION_1['properties'])
+question2_node = Node(QUESTION_LABEL, **QUESTION_2['properties'])
+question3_node = Node(QUESTION_LABEL, **QUESTION_3['properties'])
+question4_node = Node(QUESTION_LABEL, **QUESTION_4['properties'])
+
+node_list = [question1_node, question2_node, question3_node, question4_node]
+for node in node_list:
+    GRAPH.create(node)
+
 app = FastAPI()
 
 
@@ -79,14 +87,6 @@ def db_auth():
 
 @app.get("/questions/{question_id}")
 def get_questions(question_id: int):
-    question1_node = Node(QUESTION_LABEL, **QUESTION_1['properties'])
-    question2_node = Node(QUESTION_LABEL, **QUESTION_2['properties'])
-    question3_node = Node(QUESTION_LABEL, **QUESTION_3['properties'])
-    question4_node = Node(QUESTION_LABEL, **QUESTION_4['properties'])
-
-    node_list = [question1_node, question2_node, question3_node, question4_node]
-    for node in node_list:
-        GRAPH.create(node)
     if question_id == 1:
         question_response = json.dumps(QUESTION_1)
     elif question_id == 2:
