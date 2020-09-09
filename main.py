@@ -54,7 +54,7 @@ QUESTION_4 = {
     'label': QUESTION_LABEL,
     'properties': {
         'id': 4,
-        'title': 'What technologies did you learn?'
+        'title': 'What technologies did you use and learn something new, this week?'
     }
 }
 
