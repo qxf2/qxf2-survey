@@ -36,7 +36,7 @@ const AddEmployee = () => {
   );
 };
 
-class AdminPage extends React.Component {
+class EmployeeTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -98,7 +98,6 @@ class AdminPage extends React.Component {
 
     render() {
         return (
-            <>
             <div>
                 <h1 id='title'>Employee Table</h1>
                 <table id='employees'>
@@ -109,10 +108,71 @@ class AdminPage extends React.Component {
                 </table>
                 <br></br>
             </div>
-            <AddEmployee />
-            </>
         )
     }
+};
+
+class ToRespond extends React.Component {
+    constructor(props) {
+        super(props);
+        // Populating Mock Data for the purpose of UI Prototyping
+        this.state = {
+            employees: [
+                { id: 1, name: "Arunkumar Muralidharan"},
+                { id: 2, name: "Raji Gali"},
+                { id: 3, name: "Harsh Bardhan Mishra"},
+                { id: 4, name: "Rohit Prasad"},
+                { id: 5, name: "Namitha Sathyananda"},
+                { id: 6, name: "Kavitha Duraiswamy"}
+            ]
+        }
+    }
+
+    renderTableHeader() {
+        let header = Object.keys(this.state.employees[0])
+        return header.map((key, index) => {
+            return <th key={index}>{key.toUpperCase()}</th>
+        })
+    }
+
+    renderTableData() {
+        return this.state.employees.map((employee, index) => {
+            const { id, name } = employee //destructuring
+            return (
+                <tr key={id}>
+                    <td>{id}</td>
+                    <td>{name}</td>
+                </tr>
+            )
+        })
+    }
+
+    render() {
+        return (
+            <div>
+              <br></br>
+                <h1 id='title'>Employees yet to Respond</h1>
+                <table id='employees'>
+                    <tbody>
+                        <tr>{this.renderTableHeader()}</tr>
+                        {this.renderTableData()}
+                    </tbody>
+                </table>
+                <br></br>
+            </div>
+        )
+    }
+};
+
+const AdminPage = () => {
+    return (
+        <>
+            <br></br>
+            <EmployeeTable />
+            <AddEmployee />
+            <ToRespond />
+        </>
+    );
 };
 
 export default AdminPage;
