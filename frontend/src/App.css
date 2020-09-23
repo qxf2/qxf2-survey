@@ -1,3 +1,70 @@
+#page-body{
+  max-width: 700px;
+  margin: auto;
+  padding-top: 64px;
+}
+
+nav {
+  border-bottom: 4px solid lightblue;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+nav a {
+  text-decoration: none;
+  color: lightblue;
+  font-weight: bold;
+  padding: 16px 32px;
+}
+
+nav a:hover {
+  background: lightblue;
+  color: white;
+}
+
+#title {
+  text-align: center;
+  font-family: arial, sans-serif;
+}
+
+#employees {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border: 3px solid #ddd;
+  width: 100%;
+}
+
+#employees td, #employees th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#employees tr:nth-child(even){background-color: #f2f2f2;}
+
+#employees tr:hover {background-color: #ddd;}
+
+#employees th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: black;
+  color: white;
 .App {
   text-align: center;
 }
