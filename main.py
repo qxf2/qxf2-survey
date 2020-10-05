@@ -20,6 +20,9 @@ PASSWORD = config("DATABASE_PASSWORD")
 class employeeData(BaseModel):
     text: Dict
 
+class employeeRegistration(BaseModel):
+    text: Dict
+
 # Authenticating with the Database
 try:
     GRAPH = Graph(HOSTNAME, auth=(USERNAME, PASSWORD))
@@ -110,6 +113,17 @@ def get_data_from_react(data: employeeData):
     api_data = data.text
     print("Post Request is Successful")
     return api_data
+
+@app.post('/api/get_data')
+def get_new_employee_data(user: employeeRegistration):
+    emp_data = user.text
+    employee = Node("Employee", firstName=emp_data["firstName"], lastName=emp_data["lastName"], email=emp_data["email"], status=emp_data["status"])
+    try:
+        GRAPH.create(employee)
+        return {"msg": "Employee succesfully registered"}
+    except:
+        return {"msg": "Employee not registered"}
+
 
 if __name__ == "__main__":
     uvicorn.run(
