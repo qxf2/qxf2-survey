@@ -28,7 +28,7 @@ function QuestionForm({ setState, ...props }) {
   return (
     <div>
       <div className="form-group">
-        <h3>Enter your Mail ID?</h3>
+        <h3>Enter Email ID</h3>
         <input
           name="email"
           type="email"
@@ -38,7 +38,7 @@ function QuestionForm({ setState, ...props }) {
       </div>
 
       <div className="new-tech">
-        <h3>What new technologies did you learn?</h3>
+        <h3>What new technologies did you learn this week?</h3>
         <ReactTagInput tags={tags} onChange={(newTags) => setTags(newTags)} />
         <br></br>
       </div>
@@ -73,7 +73,7 @@ function QuestionForm({ setState, ...props }) {
           disabled={props.step.isLast()}
           onClick={props.next}
         >
-          Next
+          Submit
         </Button>
       </div>
     </div>
