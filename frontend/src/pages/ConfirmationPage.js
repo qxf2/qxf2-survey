@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
 
 function ConfirmationPage(props) {
   var email = props.state.email;
@@ -42,6 +43,18 @@ function ConfirmationPage(props) {
       <p><b>Who helped you:</b> {whoHelp.map(whoHelp => whoHelp.label).join(', ')}</p>
       <p><b>Whom did you help:</b> {whomHelped.map(whomHelped => whomHelped.label).join(', ')} </p>
       <p><b>Tags:</b> {tagList} </p>
+      <div className="col-md-4 offset-md-4">
+        <Button
+          variant="primary"
+          size="lg"
+          block
+          button
+          disabled={props.step.isLast()}
+          onClick={props.next}
+        >
+          Back to Survey
+        </Button>
+      </div>
     </div>
   );
 }

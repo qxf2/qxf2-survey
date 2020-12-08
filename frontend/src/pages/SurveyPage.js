@@ -9,6 +9,7 @@ function SurveyPage() {
       <Steps>
         <Step component={QuestionForm} />
         <Step component={ConfirmationPage} />
+        <Step component={QuestionForm} />
       </Steps>
     </div>
   );
