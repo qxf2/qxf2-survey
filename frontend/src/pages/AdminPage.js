@@ -27,7 +27,7 @@ const AddEmployee = () => {
     const handleSubmit = (e) => {
       e.preventDefault()
       if (formData !== "") {
-        axios.post('http://3.239.35.79:8000/survey/admin/new_employee' , {data: newEmployeeData})
+        axios.post('http://127.0.0.1:8000/survey/admin/new_employee' , {data: newEmployeeData})
           .then(function (response) {
             console.log("Post request: Success")
           })
@@ -73,7 +73,7 @@ const AddEmployee = () => {
 
 const EmployeeTable = () => {
 
-    const URL = 'http://3.239.35.79:8000/survey/admin/employees'
+    const URL = 'http://127.0.0.1:8000/survey/admin/employees'
     const [employees, setEmployees] = useState([])
 
     useEffect(() => {
@@ -132,7 +132,7 @@ const EmployeeTable = () => {
 
 const ToRespond = () => {
 
-    const URL = 'http://3.239.35.79:8000/survey/admin/not_responded_users'
+    const URL = 'http://127.0.0.1:8000/survey/admin/not_responded_users'
     const [employees, setEmployees] = useState([])
     useEffect(() => {
         getData()

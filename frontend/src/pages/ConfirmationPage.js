@@ -19,7 +19,7 @@ function ConfirmationPage(props) {
   console.log("Stored Data and passing it now");
   
   if (surveyResponse !== "") {
-    axios.post('http://3.239.35.79:8000/survey/response', {data: surveyResponse})
+    axios.post('http://127.0.0.1:8000/survey/response', {data: surveyResponse})
       .then(function (response) {
         console.log("Post request: Success")
       })

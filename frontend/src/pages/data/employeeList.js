@@ -4,7 +4,7 @@ axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
 var data = [];
 
-axios.get('http://3.239.35.79:8000/survey/admin/employees')
+axios.get('http://127.0.0.1:8000/survey/admin/employees')
   .then(function (response) {
     for (var i in response.data)
     {
