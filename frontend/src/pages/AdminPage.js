@@ -17,13 +17,13 @@ const AddEmployee = () => {
     };
 
     var newEmployeeData = {
-        'firstName': formData["employee-first-name-input"],                     
+        'firstName': formData["employee-first-name-input"],
         'lastName': formData["employee-last-name-input"],
         'email': formData["email-input"],
-        'fullName': formData["employee-first-name-input"] + formData["employee-last-name-input"],
+        'fullName': formData["employee-first-name-input"] + " " + formData["employee-last-name-input"],
         'status': formData["status-input"]
       }
-    
+
     const handleSubmit = (e) => {
       e.preventDefault()
       if (formData !== "") {
@@ -33,32 +33,32 @@ const AddEmployee = () => {
           })
           .catch(function (error) {
             console.log("Post request: Failed")
-            console.log(error.response);     
+            console.log(error.response);
           });
     };}
 
     return (
-        <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title"><strong>Add Employee</strong></h3>
+        <div className="panel panel-primary">
+        <div className="panel-heading">
+            <h3 className="panel-title"><strong>Add Employee</strong></h3>
         </div>
-        <div class="panel-body">
+        <div className="panel-body">
             <form>
-            <div class="form-group">
-                <label for="employee-first-name-input">First Name</label>
-                <input class="form-control" name="employee-first-name-input" type="text" onChange={handleChange}></input>
+            <div className="form-group">
+                <label htmlFor="employee-first-name-input">First Name</label>
+                <input className="form-control" name="employee-first-name-input" type="text" onChange={handleChange}></input>
             </div>
-            <div class="form-group">
-                <label for="employee-last-name-input">Last Name</label>
-                <input class="form-control" name="employee-last-name-input" type="text" onChange={handleChange}></input>
+            <div className="form-group">
+                <label htmlFor="employee-last-name-input">Last Name</label>
+                <input className="form-control" name="employee-last-name-input" type="text" onChange={handleChange}></input>
             </div>
-            <div class="form-group">
-                <label for="email-input">E-Mail</label>
-                <input class="form-control" name="email-input" type="text" onChange={handleChange}></input>
+            <div className="form-group">
+                <label htmlFor="email-input">E-Mail</label>
+                <input className="form-control" name="email-input" type="text" onChange={handleChange}></input>
             </div>
-            <div class="form-group">
-                <label for="status-input">Employee Status (Y/N)</label>
-                <input class="form-control" name="status-input" type="text" onChange={handleChange}></input>
+            <div className="form-group">
+                <label htmlFor="status-input">Employee Status (Y/N)</label>
+                <input className="form-control" name="status-input" type="text" onChange={handleChange}></input>
             </div>
             <div className="col-md-4 offset-md-4">
                 <Button variant="primary" size="lg" block onClick={handleSubmit}>
@@ -100,7 +100,7 @@ const EmployeeTable = () => {
     }
 
     const renderBody = () => {
-        return employees && employees.map(({ ID, firstName, lastName, status, email }) => {
+        return employees && employees.map(({ ID, firstName, lastName, status, email}) => {
             return (
                 <tr key={ID}>
                     <td>{ID}</td>
@@ -151,7 +151,7 @@ const ToRespond = () => {
     }
 
     const renderBody = () => {
-        return employees && employees.map(({ ID, firstName, lastName }) => {
+        return employees && employees.map(({ ID, firstName, lastName}) => {
             return (
                 <tr key={ID}>
                     <td>{ID}</td>

@@ -33,7 +33,7 @@ function QuestionForm({ setState, ...props }) {
           name="email"
           type="email"
           onChange={props.handleChange}
-          class="form-control"
+          className="form-control"
         />
       </div>
 
@@ -69,7 +69,7 @@ function QuestionForm({ setState, ...props }) {
           variant="primary"
           size="lg"
           block
-          button
+          button="true"
           disabled={props.step.isLast()}
           onClick={props.next}
         >

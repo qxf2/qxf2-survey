@@ -14,6 +14,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 from core import security
 from db.queries import cypher
 from db import schemas, session as db
+import threading
+import asyncio
 
 
 router = APIRouter()
@@ -24,10 +26,10 @@ GRAPH = db.auth()
 @router.get('/employees')
 def get_employee_data(authenticated: bool = Depends(security.validate_request)):
     "returns the employee details"
-    employee_data = list(GRAPH.run(cypher.GET_ALL_USERS))
+
+    employee_data=list(GRAPH.run(cypher.GET_ALL_USERS))
     employee_list = [employee[0] for employee in employee_data]
     return employee_list
-
 
 @router.post('/new_employee')
 def get_new_employee_data(user: schemas.EmployeeRegistration,\
@@ -65,13 +67,13 @@ def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate
     today = datetime.now().strftime("%Y-%m-%d")
     friday = (datetime.now() + relativedelta(weekday=FR(0))).strftime("%Y-%m-%d")
     responded_users = []
-    if today == friday:
-        for check in cypher.CHECK_IF_RESPONDED:
-            try:
-                user_id = (GRAPH.run(check,parameters={"date": friday})).to_data_frame()
-                user_id = list(set((user_id['a.ID'])))
-                responded_users.append(user_id)
-            except:
-                print("Trying to check if the user has responded today")
+    #if today == friday:
+    for check in cypher.CHECK_IF_RESPONDED:
+        try:
+            user_id = (GRAPH.run(check,parameters={"date": friday})).to_data_frame()
+            user_id = list(set((user_id['a.ID'])))
+            responded_users.append(user_id)
+        except:
+            print("Trying to check if the user has responded today")
     employee_list = get_not_responded_user_emails(responded_users)
     return employee_list

@@ -40,6 +40,10 @@ GET_USER_NAME = "MATCH (e:Employees)\
 GET_USER_ID = "MATCH (e:Employees)\
                RETURN e.ID, e.email"
 
+GET_ACTIVE_USER_ID =  "MATCH (e:Employees)\
+                       WHERE e.status='Y'\
+                       RETURN e.ID"
+
 SET_GIVEN_PROP = "MATCH (a:Employees { fullName: $user_name })-[r:GIVEN]->(b:Employees { fullName: $helped_name })\
                   WHERE NOT $date in r.helpgiven\
                   SET r.helpgiven = coalesce(r.helpgiven, []) + $date"
