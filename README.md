@@ -30,13 +30,13 @@ A Full Stack Application developed using React, FastAPI and Neo4j to make Qxf2 a
 - Keep the Username for the database as `neo4j` and password as per your choosing.
 - To migrate the database from quilt to neo4j go to `Migrate Quilt to Neo4j` section
 
-### Miigrate Quilt to Neo4j
+### Migrate Quilt to Neo4j
 
-**Prerequisites**
+#### Prerequisites
 ---
 1. Install [Neo4j Desktop](https://neo4j.com/download-v2/)
 2. Create a new project and add a local database. Set the database name as `neo4j` and any password of your choice.Note down the name and password of your database
-3. Click on the `...` option for your database and select `Manage`
+3. Click on the `...` option on your database and select `Manage`
 4. Go to Settings tab
 5. Find `dbms.directories.import` and assign it the path of `migrations` folder
    (ex: *C:/Users/xyz/Desktop/qxf2-survey/backend/app/db/migrations*)
@@ -45,7 +45,7 @@ A Full Stack Application developed using React, FastAPI and Neo4j to make Qxf2 a
 8. Copy  `Bolt Port`
 
 
-**How to Run?**
+#### How to Run?
 ---
 1. Clone this repo
 2. cd into the `backend` directory.
@@ -69,11 +69,11 @@ A Full Stack Application developed using React, FastAPI and Neo4j to make Qxf2 a
 
 ### Setting up Backend
 
-- `cd` into the `backend` directory
-- Setup and activate a virtual environment
-- Run the command to install all packages: `pip install -r requirements.txt`
-- Rename the `.env.example` in `backend` directory as `.env`
-- Open `.env` file and assign the values to the environment variable as follows:
+1. `cd` into the `backend` directory
+2. Setup and activate a virtual environment
+3. Run the command to install all packages: `pip install -r requirements.txt`
+4. Rename the `.env.example` in `backend` directory as `.env`
+5. Open `.env` file and assign the values to the environment variable as follows:
     ```
     DATABASE_USERNAME = "neo4j"
     DATABASE_PASSWORD = "<Password of your database>"
@@ -81,8 +81,8 @@ A Full Stack Application developed using React, FastAPI and Neo4j to make Qxf2 a
     API_KEY = "<Should be same  as REACT_APP_API_KEY set in the frontend .env file>"
     PROJECT_NAME= "<any>"
     ```
-- `cd` into the `app` directory
-- Kick-Start the Application with the following command: `uvicorn main:app --reload`
+6. `cd` into the `app` directory
+7. Kick-Start the Application with the following command: `uvicorn main:app --reload`
 
 
 
