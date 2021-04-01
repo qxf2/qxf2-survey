@@ -56,7 +56,9 @@ A Full Stack Application developed using React, FastAPI and Neo4j to make Qxf2 a
     ```
     DATABASE_USERNAME = "neo4j"
     DATABASE_PASSWORD = "<Prerequisites: Step 2>"
-    DATABASE_HOST = "<Prerequisites: Step 8"
+    DATABASE_HOST = "<Prerequisites: Step 8>"
+    API_KEY = ""
+    PROJECT_NAME = ""
     ```
 7. Make sure you have the quilt package `qxf2/dev_survey` installed
 8. Run `backend/app/db/migrations/quilt2neo4j.py` - which generates the required csv files
