@@ -7,6 +7,14 @@ axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 const AddEmployee = () => {
 
     const [formData, updateFormData] = React.useState([]);
+    const [employees_data, setemployees_data]=React.useState([])
+
+    useEffect(() =>{
+        axios.get('http://127.0.0.1:8000/survey/admin/employees')
+        .then(response=>{
+          setemployees_data(response.data)
+        })
+      },[])
 
     const handleChange = (e) => {
       updateFormData({
@@ -24,17 +32,40 @@ const AddEmployee = () => {
         'status': formData["status-input"]
       }
 
-    const handleSubmit = (e) => {
+    const HandleSubmit = (e) => {
       e.preventDefault()
       if (formData !== "") {
-        axios.post('http://127.0.0.1:8000/survey/admin/new_employee' , {data: newEmployeeData})
-          .then(function (response) {
-            console.log("Post request: Success")
-          })
-          .catch(function (error) {
-            console.log("Post request: Failed")
-            console.log(error.response);
-          });
+        console.log(newEmployeeData.email)
+
+        var valid_email_flag=false
+        var i=0
+        for(i=0;i<=employees_data.length-1;i++)
+        {
+        if(employees_data[i]['email']===newEmployeeData.email)
+        {
+            valid_email_flag=true
+            break;
+        }
+        }
+
+        console.log(valid_email_flag)
+
+        if(valid_email_flag===false){
+
+            axios.post('http://127.0.0.1:8000/survey/admin/new_employee' , {data: newEmployeeData})
+            .then(function (response) {
+                console.log("Post request: Success")
+            })
+            .catch(function (error) {
+                console.log("Post request: Failed")
+                console.log(error.response);
+
+            });
+        }
+        else{
+            alert("Email already exists")
+        }
+
     };}
 
     return (
@@ -61,7 +92,7 @@ const AddEmployee = () => {
                 <input className="form-control" name="status-input" type="text" onChange={handleChange}></input>
             </div>
             <div className="col-md-4 offset-md-4">
-                <Button variant="primary" size="lg" block onClick={handleSubmit}>
+                <Button variant="primary" size="lg" block onClick={HandleSubmit}>
                     Submit
             </Button>
             </div>
