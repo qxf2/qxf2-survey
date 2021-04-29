@@ -77,3 +77,10 @@ def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate
             print("Trying to check if the user has responded today")
     employee_list = get_not_responded_user_emails(responded_users)
     return employee_list
+
+@router.get('/QElo_technology')
+def qelo_get_technology(authenticated: bool = Depends(security.validate_request)):
+    "returns the technologies with coloumns that is mapped for QElo score computation"
+
+    qelo_technology = list(GRAPH.run(cypher.QELO_TECHNOLOGY))
+    return qelo_technology
