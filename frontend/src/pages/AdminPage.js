@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import url_conf from "./data/urlConf";
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
@@ -10,7 +11,7 @@ const AddEmployee = () => {
     const [employees_data, setemployees_data]=React.useState([])
 
     useEffect(() =>{
-        axios.get('http://127.0.0.1:8000/survey/admin/employees')
+        axios.get(`${url_conf}/survey/admin/employees`)
         .then(response=>{
           setemployees_data(response.data)
         })
@@ -52,7 +53,7 @@ const AddEmployee = () => {
 
         if(valid_email_flag===false){
 
-            axios.post('http://127.0.0.1:8000/survey/admin/new_employee' , {data: newEmployeeData})
+            axios.post(`${url_conf}/survey/admin/new_employee` , {data: newEmployeeData})
             .then(function (response) {
                 console.log("Post request: Success")
             })
@@ -104,17 +105,17 @@ const AddEmployee = () => {
 
 const EmployeeTable = () => {
 
-    const URL = 'http://127.0.0.1:8000/survey/admin/employees'
+    const URL = `${url_conf}/survey/admin/employees`
     const [employees, setEmployees] = useState([])
-
-    useEffect(() => {
-        getData()
-    }, [])
 
     const getData = async () => {
         const response = await axios.get(URL)
         setEmployees(response.data)
     }
+
+    useEffect(() => {
+        getData()
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     const removeData = (id) => {
         axios.delete(`${URL}/${id}`).then(res => {
@@ -163,16 +164,16 @@ const EmployeeTable = () => {
 
 const ToRespond = () => {
 
-    const URL = 'http://127.0.0.1:8000/survey/admin/not_responded_users'
+    const URL = `${url_conf}/survey/admin/not_responded_users`
     const [employees, setEmployees] = useState([])
-    useEffect(() => {
-        getData()
-    }, [])
-
     const getData = async () => {
         const response = await axios.get(URL)
         setEmployees(response.data)
     }
+
+    useEffect(() => {
+        getData()
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     const renderHeader = () => {
         let headerElement = ['ID', 'Name']

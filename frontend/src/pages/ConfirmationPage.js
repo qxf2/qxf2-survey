@@ -1,5 +1,6 @@
 import React,{ useState, useEffect } from "react";
 import axios from "axios";
+import url_conf from "./data/urlConf"
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
@@ -12,7 +13,7 @@ function ConfirmationPage(props) {
   const [Loader, setLoader]=useState(true)
 
   useEffect(() =>{
-    axios.get('http://127.0.0.1:8000/survey/admin/employees')
+    axios.get(`${url_conf}/survey/admin/employees`)
     .then(response=>{
       setemployees_data(response.data)
       setLoader(false)
@@ -48,7 +49,7 @@ function ConfirmationPage(props) {
         console.log("Stored Data and passing it now");
 
         if (surveyResponse !== "") {
-          axios.post('http://127.0.0.1:8000/survey/response', {data: surveyResponse})
+          axios.post(`${url_conf}/survey/response`, {data: surveyResponse})
             .then(function (response) {
               console.log("Post request: Success")
             })

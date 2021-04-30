@@ -86,3 +86,6 @@ GET_USERS_BY_ID = "MATCH (e:Employees { ID: $id }) RETURN e"
 CHECK_IF_RESPONDED = ["MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date in x.helpgiven return a.ID",
                       "MATCH (a:Employees)<-[y:TAKEN]-(b:Employees) WHERE $date in y.helptaken return a.ID",
                       "MATCH (a:Employees)-[z:KNOWS]-(b:Technology) WHERE $date in z.learnt_dates return a.ID"]
+
+QELO_TECHNOLOGY = "MATCH (m:Employees)-[r]->(n:Technology)\
+                   RETURN m.ID AS respondent_id,n.technology_name AS technology,r.learnt_dates AS date"
