@@ -29,7 +29,7 @@ def setup_dfs():
     # response
     response = app.response()
     response = preprocess(response, drop_col="id", strip_col='answer')
-    response['date'] = response['date'].dt.strftime("%Y-%m-%d")
+    response['date'] = pd.to_datetime(response['date'], errors = 'coerce', format = '%Y-%m-%d').dt.strftime("%Y-%m-%d")
     # technology
     technology = app.technology()
     technology = preprocess(technology, drop_na=True, strip_col='technology')
