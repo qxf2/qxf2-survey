@@ -46,7 +46,6 @@ function ConfirmationPage(props) {
           'listHelped': whomHelped,
           'listTags': tagList
         }
-        console.log("Stored Data and passing it now");
 
         if (surveyResponse !== "") {
           axios.post(`${url_conf}/survey/response`, {data: surveyResponse})

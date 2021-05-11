@@ -36,7 +36,6 @@ const AddEmployee = () => {
     const HandleSubmit = (e) => {
       e.preventDefault()
       if (formData !== "") {
-        console.log(newEmployeeData.email)
 
         var valid_email_flag=false
         var i=0
@@ -48,8 +47,6 @@ const AddEmployee = () => {
             break;
         }
         }
-
-        console.log(valid_email_flag)
 
         if(valid_email_flag===false){
 
