@@ -24,8 +24,8 @@ def setup_dfs():
     # users
     users = app.users()
     users['fullName'] = users['first_name'] + " " + users['last_name']
-    users = preprocess(users, drop_col="author_name", strip_col="fullName")
-    users.columns = ['ID','firstName','lastName', 'email', 'status', 'fullName']
+    users = preprocess(users, strip_col="fullName")
+    users.columns = ['ID','firstName','lastName', 'email', "author_name", 'status', 'fullName']
     # response
     response = app.response()
     response = preprocess(response, drop_col="id", strip_col='answer')

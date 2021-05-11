@@ -8,6 +8,7 @@ IMPORT_EMPLOYEES = """LOAD CSV WITH HEADERS FROM $path as row\
                                           firstName: row.firstName,\
                                           lastName: coalesce(row.lastName,""),\
                                           email: row.email,\
+                                          author_name: coalesce(row.author_name,""),\
                                           status: row.status})"""
 
 IMPORT_EMPLOYEES_HELPTAKEN = """LOAD CSV WITH HEADERS FROM $path as row\
@@ -89,3 +90,16 @@ CHECK_IF_RESPONDED = ["MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date 
 
 QELO_TECHNOLOGY = "MATCH (m:Employees)-[r]->(n:Technology)\
                    RETURN m.ID AS respondent_id,n.technology_name AS technology,r.learnt_dates AS date"
+
+QELO_USERS = "MATCH (e:Employees) RETURN e.ID as id, e.firstName as first_name, e.lastName as last_name,\
+              e.email as  email, e.author_name as author_name, e.status as active_flag"
+
+QELO_RESPONSE = "MATCH (m:Employees)-[r]->(n:Employees) RETURN m.ID AS respondent_id,\
+                 CASE type(r)\
+	             WHEN 'TAKEN' THEN r.helptaken\
+                 WHEN 'GIVEN' THEN r.helpgiven\
+                 END AS date,\
+                 CASE type(r)\
+	             WHEN 'TAKEN' THEN 1\
+	             WHEN 'GIVEN' THEN 2\
+                 END AS question_no, n.fullName as answer"

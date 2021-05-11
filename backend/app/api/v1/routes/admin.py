@@ -17,11 +17,8 @@ from db import schemas, session as db
 import threading
 import asyncio
 
-
 router = APIRouter()
-
 GRAPH = db.auth()
-
 
 @router.get('/employees')
 def get_employee_data(authenticated: bool = Depends(security.validate_request)):
@@ -78,9 +75,26 @@ def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate
     employee_list = get_not_responded_user_emails(responded_users)
     return employee_list
 
+@router.get('/QElo_users')
+def qelo_get_users(authenticated: bool = Depends(security.validate_request)):
+    "Simulates the user node of quilt for QElo score computation"
+
+    qelo_users = GRAPH.run(cypher.QELO_USERS).data()
+    return qelo_users
+
 @router.get('/QElo_technology')
 def qelo_get_technology(authenticated: bool = Depends(security.validate_request)):
     "returns the technologies with coloumns that is mapped for QElo score computation"
-
-    qelo_technology = list(GRAPH.run(cypher.QELO_TECHNOLOGY))
+    qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY).data()
     return qelo_technology
+
+
+@router.get('/QElo_response')
+def qelo_get_response(authenticated: bool = Depends(security.validate_request)):
+    "simulates the response node of quilt for QElo score computation"
+
+    qelo_response = GRAPH.run(cypher.QELO_RESPONSE).data()
+    return qelo_response
+
+
+
