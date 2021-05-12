@@ -113,16 +113,17 @@ const EmployeeTable = () => {
     useEffect(() => {
         getData()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
-
+    /*
     const removeData = (id) => {
         axios.delete(`${URL}/${id}`).then(res => {
             const del = employees.filter(employee => id !== employee.ID)
             setEmployees(del)
         })
     }
+    */
 
     const renderHeader = () => {
-        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email','operation']
+        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email']
         return headerElement.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
@@ -137,9 +138,6 @@ const EmployeeTable = () => {
                     <td>{lastName}</td>
                     <td>{status}</td>
                     <td>{email}</td>
-                    <td className='operation'>
-                        <button className='button' onClick={() => removeData(ID)}>Delete</button>
-                    </td>
                 </tr>
             )
         })
