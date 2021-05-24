@@ -104,3 +104,8 @@ nav a:hover {
     transform: rotate(360deg);
   }
 }
+
+#reference{
+  font-size: 12px
+
+}
