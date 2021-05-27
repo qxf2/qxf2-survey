@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import SurveyPage from './pages/SurveyPage';
 import AdminPage from './pages/AdminPage';
 import DashboardPage from './pages/DashboardPage';
+import LoginPage from './pages/login';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/survey" component={SurveyPage} />
             <Route path="/admin" component={AdminPage} />
             <Route path="/dashboard" component={DashboardPage} />
+            <Route path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />
          </Switch>
          </div>

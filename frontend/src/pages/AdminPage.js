@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import url_conf from "./data/urlConf";
+import LoginForm from "./login"
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
+const temp=""
 
 const AddEmployee = () => {
 
@@ -203,14 +205,33 @@ const ToRespond = () => {
 }
 
 const AdminPage = () => {
+    const [LoginStatus, updateLoginStatus] = React.useState(false);
+    const Login = (login_status) => {
+        console.log(login_status)
+        if(login_status === true){
+            updateLoginStatus(true)
+        }
+    }
+    const Logout= () => {
+    updateLoginStatus(false)
+    }
     return (
+        <div className="App">
+        {
+        (LoginStatus === true)?
+        (
         <>
             <br></br>
             <EmployeeTable />
             <AddEmployee />
             <ToRespond />
+            <Button variant="primary" onClick={Logout}>Logout</Button>
         </>
+        ): (<LoginForm Login={Login}/>)
+        }
+        </div>
     );
 };
+
 
 export default AdminPage;
