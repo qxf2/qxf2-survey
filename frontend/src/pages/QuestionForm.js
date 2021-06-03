@@ -38,13 +38,13 @@ function QuestionForm({ setState, ...props }) {
       </div>
 
       <div className="new-tech">
-        <h3>What new technologies did you learn this week?</h3>
+        <h3>What new technologies did you learn this week?<sub id="reference"><a href="https://wiki.qxf2.com/home/r-d/newbie-orientation/what-technologies-did-you-work-on-this-week">Help</a></sub></h3>
         <ReactTagInput tags={tags} onChange={(newTags) => setTags(newTags)} />
         <br></br>
       </div>
 
       <div className="who-helped">
-        <h3>Who helped you this week?</h3>
+        <h3>Who helped you this week?<sub id="reference"><a href="https://wiki.qxf2.com/home/r-d/newbie-orientation/helping-others">Help</a></sub></h3>
         <MultiSelect
           options={options}
           value={selectedHelp}
@@ -55,7 +55,7 @@ function QuestionForm({ setState, ...props }) {
       </div>
 
       <div className="whom-did-you-help">
-        <h3>Whom did you help this week?</h3>
+        <h3>Whom did you help this week?<sub id="reference"><a href="https://wiki.qxf2.com/home/r-d/newbie-orientation/helping-others">Help</a></sub></h3>
         <MultiSelect
           options={options}
           value={selectedHelped}
