@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import url_conf from "./data/urlConf";
+import LoginForm from "./login"
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
@@ -113,17 +114,17 @@ const EmployeeTable = () => {
     useEffect(() => {
         getData()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
-    /*
+
     const removeData = (id) => {
         axios.delete(`${URL}/${id}`).then(res => {
             const del = employees.filter(employee => id !== employee.ID)
             setEmployees(del)
         })
     }
-    */
+
 
     const renderHeader = () => {
-        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email']
+        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email','operation']
         return headerElement.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
@@ -138,6 +139,9 @@ const EmployeeTable = () => {
                     <td>{lastName}</td>
                     <td>{status}</td>
                     <td>{email}</td>
+                    <td className='operation'>
+                        <button className='button' onClick={() => removeData(ID)}>Delete</button>
+                    </td>
                 </tr>
             )
         })
@@ -203,14 +207,32 @@ const ToRespond = () => {
 }
 
 const AdminPage = () => {
+    const [LoginStatus, updateLoginStatus] = React.useState(false);
+    const Login = (login_status) => {
+        if(login_status === true){
+            updateLoginStatus(true)
+        }
+    }
+    const Logout= () => {
+    updateLoginStatus(false)
+    }
     return (
+        <div className="App">
+        {
+        (LoginStatus === true)?
+        (
         <>
             <br></br>
             <EmployeeTable />
             <AddEmployee />
             <ToRespond />
+            <Button variant="primary" onClick={Logout}>Logout</Button>
         </>
+        ): (<LoginForm Login={Login}/>)
+        }
+        </div>
     );
 };
+
 
 export default AdminPage;
