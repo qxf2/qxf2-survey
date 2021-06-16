@@ -88,6 +88,10 @@ CHECK_IF_RESPONDED = ["MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date 
                       "MATCH (a:Employees)<-[y:TAKEN]-(b:Employees) WHERE $date in y.helptaken return a.ID",
                       "MATCH (a:Employees)-[z:KNOWS]-(b:Technology) WHERE $date in z.learnt_dates return a.ID"]
 
+TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK = "MATCH (a:Employees)-[z:KNOWS]-(b:Technology)\
+                                          WHERE $date_monday in z.learnt_dates OR $date_friday in z.learnt_dates\
+                                          return a.fullName AS Name,b.technology_name AS Technology"
+
 QELO_TECHNOLOGY = "MATCH (m:Employees)-[r]->(n:Technology)\
                    RETURN m.ID AS respondent_id,n.technology_name AS technology,r.learnt_dates AS date"
 
@@ -103,3 +107,4 @@ QELO_RESPONSE = "MATCH (m:Employees)-[r]->(n:Employees) RETURN m.ID AS responden
 	             WHEN 'TAKEN' THEN 1\
 	             WHEN 'GIVEN' THEN 2\
                  END AS question_no, n.fullName as answer"
+
