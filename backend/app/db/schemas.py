@@ -4,6 +4,7 @@ This module models the api request bodies
 
 from typing import Dict
 from pydantic import BaseModel
+import datetime
 
 class EmployeeData(BaseModel):
     "request body"
@@ -13,4 +14,12 @@ class EmployeeData(BaseModel):
 class EmployeeRegistration(BaseModel):
     "request body"
     data: Dict
-    
+
+class FetchTechnology(BaseModel):
+    "request body"
+    date: datetime.date
+
+class FetchResponses(BaseModel):
+    "request body"
+    start_date: datetime.date
+    end_date: datetime.date

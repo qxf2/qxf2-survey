@@ -4,7 +4,7 @@ This module contains the endpoints related to Admin page in the frontend
 
 import os
 import sys
-from datetime import datetime
+from datetime import datetime , timedelta
 from dateutil.relativedelta import relativedelta, FR
 from fastapi import APIRouter, Depends
 from py2neo import Node
@@ -78,7 +78,6 @@ def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate
 @router.get('/QElo_users')
 def qelo_get_users(authenticated: bool = Depends(security.validate_request)):
     "Simulates the user node of quilt for QElo score computation"
-
     qelo_users = GRAPH.run(cypher.QELO_USERS).data()
     return qelo_users
 
@@ -92,9 +91,27 @@ def qelo_get_technology(authenticated: bool = Depends(security.validate_request)
 @router.get('/QElo_response')
 def qelo_get_response(authenticated: bool = Depends(security.validate_request)):
     "simulates the response node of quilt for QElo score computation"
-
     qelo_response = GRAPH.run(cypher.QELO_RESPONSE).data()
     return qelo_response
 
+@router.post('/techs_learnt_on_week')
+def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
+                      authenticated: bool = Depends(security.validate_request)):
+    "returns all the technologies learnt in the week for a given date"
+    date = fetched_date.date
+    monday = date - timedelta(days=date.weekday())
+    friday = (date + relativedelta(weekday=FR(0))).strftime("%Y-%m-%d")
+    technologies = GRAPH.run(cypher.TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK,
+                             parameters={"date_monday":str(monday),
+                             "date_friday":str(friday)}).data()
+    return technologies
 
+@router.post('/QElo_filter_response')
+def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
+                                      authenticated: bool = Depends(security.validate_request)):
+    "simulates the response node of quilt for QElo score computation"
 
+    start_date = fetched_date.start_date
+    end_date = fetched_date.end_date
+    qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
+    return qelo_response
