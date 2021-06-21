@@ -18,3 +18,8 @@ class EmployeeRegistration(BaseModel):
 class FetchTechnology(BaseModel):
     "request body"
     date: datetime.date
+
+class FetchResponses(BaseModel):
+    "request body"
+    start_date: datetime.date
+    end_date: datetime.date

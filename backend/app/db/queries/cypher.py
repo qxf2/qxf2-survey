@@ -108,3 +108,20 @@ QELO_RESPONSE = "MATCH (m:Employees)-[r]->(n:Employees) RETURN m.ID AS responden
 	             WHEN 'GIVEN' THEN 2\
                  END AS question_no, n.fullName as answer"
 
+QELO_RESPONSE_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Employees) WITH\
+                           CASE type(r)\
+                           WHEN 'GIVEN' THEN r.helpgiven\
+                           WHEN 'TAKEN' THEN r.helptaken\
+                           END AS dates\
+                           WITH dates UNWIND dates AS helpdate\
+                           WITH helpdate\
+                           WHERE date(helpdate)>=date($start_date)\
+                           AND date(helpdate)<=date($end_date)\
+                           MATCH (m:Employees)-[r]->(n:Employees)\
+                           WHERE helpdate in r.helpgiven\
+                           OR helpdate in r.helptaken\
+                           RETURN m.ID AS respondent_id,helpdate AS date,\
+                           CASE type(r)\
+                           WHEN 'TAKEN' THEN 1\
+                           WHEN 'GIVEN' THEN 2\
+                           END AS question_no,n.fullName AS answer"

@@ -105,3 +105,13 @@ def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
                              parameters={"date_monday":str(monday),
                              "date_friday":str(friday)}).data()
     return technologies
+
+@router.post('/QElo_filter_response')
+def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
+                                      authenticated: bool = Depends(security.validate_request)):
+    "simulates the response node of quilt for QElo score computation"
+
+    start_date = fetched_date.start_date
+    end_date = fetched_date.end_date
+    qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
+    return qelo_response
