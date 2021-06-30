@@ -12,7 +12,7 @@ app = FastAPI(title="Help-Survey", openapi_url="/survey/apis")
 # To handle CORS (Cross-Origin Resource Sharing)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["http://15.207.159.86","http://localhost:3000"],
+    allow_origins = ["http://15.207.159.86", "http://localhost:3000", "http://www.survey.qxf2.com", "http://survey.qxf2.com","https://www.survey.qxf2.com", "https://survey.qxf2.com/"],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
