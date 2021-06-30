@@ -1,3 +1,3 @@
-const url = "http://3.239.35.79"
+const url = "https://survey-backend.qxf2.com"
 
 export default url;
