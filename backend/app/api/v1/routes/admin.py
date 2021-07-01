@@ -117,11 +117,11 @@ def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
     return qelo_response
 
 @router.post('/QElo_filter_technology')
-def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
+def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses,
                                       authenticated: bool = Depends(security.validate_request)):
-    "simulates the response node of quilt for QElo score computation"
+    "simulates the technology node of quilt for QElo score computation"
 
     start_date = fetched_date.start_date
     end_date = fetched_date.end_date
-    qelo_response = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
-    return qelo_response
+    qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
+    return qelo_technology
