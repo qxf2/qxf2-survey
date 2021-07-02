@@ -96,7 +96,7 @@ def qelo_get_response(authenticated: bool = Depends(security.validate_request)):
 
 @router.post('/techs_learnt_on_week')
 def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
-                      authenticated: bool = Depends(security.validate_request)):
+                                authenticated: bool = Depends(security.validate_request)):
     "returns all the technologies learnt in the week for a given date"
     date = fetched_date.date
     monday = date - timedelta(days=date.weekday())
@@ -104,24 +104,41 @@ def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
     technologies = GRAPH.run(cypher.TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK,
                              parameters={"date_monday":str(monday),
                              "date_friday":str(friday)}).data()
-    return technologies
+    filtered_technology = []
+    for each_technology in technologies:
+        if each_technology not in filtered_technology:
+            filtered_technology.append(each_technology)
+    return filtered_technology
 
 @router.post('/QElo_filter_response')
 def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
-                                      authenticated: bool = Depends(security.validate_request)):
+                                          authenticated: bool = Depends(security.validate_request)):
     "simulates the response node of quilt for QElo score computation"
 
     start_date = fetched_date.start_date
     end_date = fetched_date.end_date
-    qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
-    return qelo_response
+    qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
+                              parameters={"start_date":str(start_date),
+                              "end_date":str(end_date)}).data()
+    filtered_response = []
+    for each_response in qelo_response:
+        if each_response not in filtered_response:
+            filtered_response.append(each_response)
+    return filtered_response
 
 @router.post('/QElo_filter_technology')
 def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses,
-                                      authenticated: bool = Depends(security.validate_request)):
+                                            authenticated: bool = Depends(security.validate_request)):
     "simulates the technology node of quilt for QElo score computation"
 
     start_date = fetched_date.start_date
     end_date = fetched_date.end_date
-    qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,parameters={"start_date":str(start_date),"end_date":str(end_date)}).data()
-    return qelo_technology
+    qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,
+                                parameters={"start_date":str(start_date),
+                                "end_date":str(end_date)}).data()
+    filtered_technology = []
+    for each_technology in qelo_technology:
+        if each_technology not in filtered_technology:
+            filtered_technology.append(each_technology)
+    return filtered_technology
+
