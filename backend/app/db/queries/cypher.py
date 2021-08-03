@@ -88,9 +88,10 @@ CHECK_IF_RESPONDED = ["MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date 
                       "MATCH (a:Employees)<-[y:TAKEN]-(b:Employees) WHERE $date in y.helptaken return a.ID",
                       "MATCH (a:Employees)-[z:KNOWS]-(b:Technology) WHERE $date in z.learnt_dates return a.ID"]
 
-TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK = "MATCH (a:Employees)-[z:KNOWS]-(b:Technology)\
-                                          WHERE $date_monday in z.learnt_dates OR $date_friday in z.learnt_dates\
-                                          return a.fullName AS Name,b.technology_name AS Technology"
+TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK =  "MATCH (a:Employees)-[z:KNOWS]-(b:Technology)\
+                                           WHERE $date_monday in z.learnt_dates OR $date_friday in z.learnt_dates\
+                                           WITH DISTINCT[a.fullName,b.technology_name] AS output\
+                                           RETURN output[0] AS Name,output[1] AS Technology"
 
 QELO_TECHNOLOGY = "MATCH (m:Employees)-[r]->(n:Technology)\
                    RETURN m.ID AS respondent_id,n.technology_name AS technology,r.learnt_dates AS date"
@@ -120,19 +121,20 @@ QELO_RESPONSE_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Employees) WITH\
                                MATCH (m:Employees)-[r]->(n:Employees)\
                                WHERE helpdate in r.helpgiven\
                                OR helpdate in r.helptaken\
-                               RETURN m.ID AS respondent_id,helpdate AS date,\
-                               CASE type(r)\
+                               WITH distinct [m.ID,helpdate,CASE type(r)\
                                WHEN 'TAKEN' THEN 1\
                                WHEN 'GIVEN' THEN 2\
-                               END AS question_no,n.fullName AS answer"
+                               END,n.fullName] as output\
+                               RETURN output[0] AS respondent_id, output[1] AS date,\
+                               output[2] AS question_no, output[3] AS answer"
 
 QELO_TECHNOLOGY_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Technology)\
                                  WITH r.learnt_dates AS dates UNWIND dates\
                                  AS learn WITH learn\
                                  WHERE date(learn)>=date($start_date)\
-                                 AND date(learn)<=date($end_date) \
+                                 AND date(learn)<=date($end_date)\
                                  MATCH (m:Employees)-[r]->(n:Technology)\
                                  WHERE learn in r.learnt_dates\
-                                 RETURN m.ID AS respondent_id,\
-                                 n.technology_name AS technology,\
-                                 learn as date"
+                                 WITH DISTINCT[m.ID,n.technology_name,learn] AS\
+                                 output RETURN output[0] AS respondent_id,\
+                                 output[1] AS technology,output[2] AS date"
