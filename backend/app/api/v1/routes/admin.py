@@ -16,7 +16,6 @@ from db.queries import cypher
 from db import schemas, session as db
 import threading
 import asyncio
-from iteration_utilities import unique_everseen
 
 router = APIRouter()
 GRAPH = db.auth()
