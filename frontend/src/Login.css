@@ -1,10 +1,7 @@
-@media all and (min-width: 480px) {
-    .Login {
-      padding: 60px 0;
-    }
-
-    .Login form {
-      margin: 0 auto;
-      max-width: 320px;
-    }
-  }
+.g-signin{
+  position: absolute;
+  top: 42%;
+  left: 42%;
+  margin-top: -50px;
+  margin-left: -50px;
+}
