@@ -6,7 +6,7 @@ import os
 import sys
 from datetime import datetime , timedelta
 from dateutil.relativedelta import relativedelta, FR
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form, HTTPException
 from py2neo import Node
 from ..dependencies.employee import get_user_id, get_not_responded_user_emails
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(\
@@ -14,8 +14,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 from core import security
 from db.queries import cypher
 from db import schemas, session as db
-import threading
-import asyncio
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from decouple import config
+import secrets
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+import json
 
 router = APIRouter()
 GRAPH = db.auth()
@@ -129,4 +133,32 @@ def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses
                                 parameters={"start_date":str(start_date),
                                 "end_date":str(end_date)}).data()
     return qelo_technology
+
+@router.post('/admin-login')
+def admin_login(idtoken: str = Form(...),
+                authenticated: bool = Depends(security.validate_request)):
+    "handle admin login"
+
+    try:
+        # Specify the CLIENT_ID of the app that accesses the backend:
+        CLIENT_ID = config("CLIENT_ID")
+        idinfo = id_token.verify_oauth2_token(idtoken, requests.Request(), CLIENT_ID)
+        emails = json.loads(config("ADMIN_EMAIL"))
+        email_match = False
+        for email in emails:
+            # ID token is valid. Get the user's Google Account ID from the decoded token.
+            if secrets.compare_digest(idinfo['email'], str(email)):
+                email_match = True
+                break
+        if email_match == False:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED, detail="User Unauthorized", headers={}
+            )
+
+        return True
+
+    except ValueError:
+    # Invalid token
+        return ValueError
+
 

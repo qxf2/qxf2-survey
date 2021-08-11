@@ -3,8 +3,10 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import url_conf from "./data/urlConf";
 import LoginForm from "./login"
+import { GoogleLogout } from 'react-google-login';
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
+const clientId = process.env.REACT_APP_CLIENT_ID
 
 const AddEmployee = () => {
 
@@ -208,14 +210,19 @@ const ToRespond = () => {
 
 const AdminPage = () => {
     const [LoginStatus, updateLoginStatus] = React.useState(false);
-    const Login = (login_status) => {
+    const [useremail, setUseremail] = React.useState(null)
+    const Login = (login_status,email) => {
         if(login_status === true){
             updateLoginStatus(true)
+            setUseremail(email)
         }
     }
-    const Logout= () => {
-    updateLoginStatus(false)
-    }
+
+    const onSignoutSuccess = () => {
+        alert("You have been logged out successfully");
+        console.clear();
+        updateLoginStatus(false)
+    };
     return (
         <div className="App">
         {
@@ -223,16 +230,26 @@ const AdminPage = () => {
         (
         <>
             <br></br>
+            <span style={{float:"right",marginRight:"-350px"}}>
+            <p style={{float:'center'}}>Logged in as {useremail}</p>
+            <GoogleLogout
+                clientId={clientId}
+                buttonText="Sign Out"
+                onLogoutSuccess={onSignoutSuccess}
+            >
+            </GoogleLogout>
+            </span>
+            <br></br>
+            <br></br>
+            <br></br>
             <EmployeeTable />
             <AddEmployee />
             <ToRespond />
-            <Button variant="primary" onClick={Logout}>Logout</Button>
         </>
         ): (<LoginForm Login={Login}/>)
         }
         </div>
     );
 };
-
 
 export default AdminPage;
