@@ -108,11 +108,7 @@ def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
     technologies = GRAPH.run(cypher.TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK,
                              parameters={"date_monday":str(monday),
                              "date_friday":str(friday)}).data()
-    filtered_technology = []
-    for each_technology in technologies:
-        if each_technology not in filtered_technology:
-            filtered_technology.append(each_technology)
-    return filtered_technology
+    return technologies
 
 @router.post('/QElo_filter_response')
 def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
@@ -124,11 +120,7 @@ def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
     qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
                               parameters={"start_date":str(start_date),
                               "end_date":str(end_date)}).data()
-    filtered_response = []
-    for each_response in qelo_response:
-        if each_response not in filtered_response:
-            filtered_response.append(each_response)
-    return filtered_response
+    return qelo_response
 
 @router.post('/QElo_filter_technology')
 def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses,
@@ -140,11 +132,7 @@ def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses
     qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,
                                 parameters={"start_date":str(start_date),
                                 "end_date":str(end_date)}).data()
-    filtered_technology = []
-    for each_technology in qelo_technology:
-        if each_technology not in filtered_technology:
-            filtered_technology.append(each_technology)
-    return filtered_technology
+    return qelo_technology
 
 @router.post('/admin-login')
 def admin_login(idtoken: str = Form(...),
