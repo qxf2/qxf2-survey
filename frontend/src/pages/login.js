@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import "../Login.css";
+import url_conf from "./data/urlConf";
 
 const clientId = process.env.REACT_APP_CLIENT_ID;
 
@@ -16,7 +17,7 @@ export default function Login({Login}) {
         setShowloginButton(false);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8000/survey/admin/admin-login');
+        xhr.open('POST', `${url_conf}/survey/admin/admin-login`);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.setRequestHeader('User', process.env.REACT_APP_API_KEY);
         xhr.onload = function() {
