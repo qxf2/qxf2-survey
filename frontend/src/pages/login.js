@@ -62,7 +62,7 @@ export default function Login({Login}) {
                 /> : null}
 
             { unauthorized ?
-                <span>Logged in as {useremail}<br></br> <h5>Your Unauthorized to view this page</h5></span>:null
+                <span>Logged in as {useremail}<br></br> <h5>You are Unauthorized to view this page</h5></span>:null
             }
 
             { showlogoutButton ?
