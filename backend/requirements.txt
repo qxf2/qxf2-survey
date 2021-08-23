@@ -6,3 +6,5 @@ quilt==2.9.15
 pandas==1.1.5
 numpy==1.19.3
 python-dateutil==2.8.1
+google-auth==1.34.0
+python-multipart==0.0.5
