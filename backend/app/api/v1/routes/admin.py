@@ -4,11 +4,11 @@ This module contains the endpoints related to Admin page in the frontend
 
 import os
 import sys
-from datetime import datetime , timedelta
+from datetime import datetime , timedelta, date
 from dateutil.relativedelta import relativedelta, FR
 from fastapi import APIRouter, Depends, Form, HTTPException
 from py2neo import Node
-from ..dependencies.employee import get_user_id, get_not_responded_user_emails
+from ..dependencies.employee import get_user_id, get_not_responded_user_emails, get_symmetry_score
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(\
                                                    os.path.abspath(__file__))))))
 from core import security
@@ -154,11 +154,28 @@ def admin_login(idtoken: str = Form(...),
             raise HTTPException(
                 status_code=HTTP_401_UNAUTHORIZED, detail="User Unauthorized", headers={}
             )
-
         return True
-
     except ValueError:
-    # Invalid token
+        # Invalid token
         return ValueError
+
+@router.get('/symmetry-score')
+def symmetry_score(authenticated: bool = Depends(security.validate_request)):
+    "Get symmetery score"
+
+    active_employees = GRAPH.run(cypher.GET_ACTIVE_USER_NAME).data()
+    end_date=str(date.today())
+
+    #3/6months from today For 3months set days = 90 , 6 months = 180
+    start_date=str(date.today() - timedelta(days=90))
+    response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
+                              parameters={"start_date":str(start_date),
+                              "end_date":str(end_date)}).data()
+
+    score = get_symmetry_score(start_date, end_date, response, active_employees)
+
+    return score
+
+
 
 

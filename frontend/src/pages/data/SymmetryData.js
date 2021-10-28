@@ -1,5 +1,25 @@
+import axios from "axios";
+import URL from "./urlConf";
+
+axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
+
+var data = [];
+
+
+axios.get(`${URL}/survey/admin/employees`)
+  .then(function (response) {
+    for (var i in response.data)
+    {
+      if (response.data[i]['status'].toLowerCase() === "y"){
+      data.push(response.data[i]['fullName']);
+    }}
+  })
+  .catch(function (error) {
+    console.log(error.response);
+  });
+
 const SymmetryData = {
-  labels: ['Shivahari', 'Arunkumar', 'Rahul', 'Raji', 'Avinash', 'Smitha', 'Rohit'],
+  labels: data,
   datasets: [
     {
       label: "Symmetry Score",

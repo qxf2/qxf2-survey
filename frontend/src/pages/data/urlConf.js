@@ -1,3 +1,3 @@
-const url = "https://survey-backend.qxf2.com"
+const url = "http://localhost:8000"
 
 export default url;

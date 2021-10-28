@@ -8,6 +8,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
                                                    os.path.abspath(__file__))))))
 from db import session
 from db.queries import cypher
+import pandas as pd
+#from flask import jsonify
 
 GRAPH = session.auth()
 
@@ -74,3 +76,57 @@ def get_not_responded_user_emails(responded_users):
         non_responded_users.append(user[0])
     employee_list = [employee[0] for employee in non_responded_users]
     return employee_list
+
+
+def get_symmetry_score(start_date, end_date, responses, active_employees):
+    "Calculate the symmetry"
+
+    enddate = end_date
+
+    #3/6months from today For 3months set days = 90 , 6 months = 180
+    startdate= start_date
+    emp_name = pd.DataFrame(active_employees)
+    responses = pd.DataFrame(responses)
+
+    error="No data found for this search"
+    #who helped you
+    rbd_helped_you=responses[(responses.date >= startdate)&(responses.date <= enddate)&(responses.question_no==1) &(responses.answer.isin(emp_name.name))].groupby(responses.answer).size()
+    rbd_helped_you=normalize_scores(rbd_helped_you)
+    #whom did you help
+    rbd_you_helped=responses[(responses.date >= startdate)&(responses.date <= enddate)&(responses.question_no==2)&(responses.answer.isin(emp_name.name))].groupby(responses.answer).size()
+    rbd_you_helped=normalize_scores(rbd_you_helped)
+    rbd_symmetry_score={}
+    name=[]
+    score=[]
+    #iterating through the dataframes of helped data and calculated Symmetry score for each employee
+    for help_name,help_score in rbd_helped_you.items():
+        rbd_symmetry_score[help_name]=help_score*100.0/rbd_you_helped[help_name]
+        name.append(help_name)
+        score.append(rbd_symmetry_score[help_name])
+    employee_name=[employee_name for _,employee_name in sorted(zip(score,name),reverse=True)]
+    score.sort(reverse=True)
+
+    if len(employee_name) != 0:
+        overall_symmetry_score={"employee_name":  employee_name, "data":score,"error":" "}
+    else:
+        overall_symmetry_score={"employee_name":  employee_name, "data":score,"error":error}
+
+    return overall_symmetry_score
+
+def normalize_scores(my_dict):
+  "Normalize the scores to be between 0 and 1"
+  max_score = get_max_score(my_dict)
+  for name,score in my_dict.items():
+    my_dict[name] = score*100/max_score
+
+  return my_dict
+
+def get_max_score(my_dict):
+    "Return the max score in a (name:score) dict"
+    max_score = 0
+    for key,val in my_dict.items():
+        if max_score < val:
+            max_score = val
+
+    return max_score
+
