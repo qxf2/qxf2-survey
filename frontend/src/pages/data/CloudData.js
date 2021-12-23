@@ -5,10 +5,15 @@ axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
 var temp = [];
 var tech=[];
+var myCurrentDate = new Date();
+var myPastDate = new Date(myCurrentDate);
+myPastDate.setDate(myPastDate.getDate() - 90)
+let past_date = `${myPastDate.getFullYear()}-${myPastDate.getMonth() + 1}-${myPastDate.getDate()}`;
+let current_date = `${myCurrentDate.getFullYear()}-${myCurrentDate.getMonth() + 1}-${myCurrentDate.getDate()}`;
 
 const date_range = {
-  'start_date':  Date().toLocaleString(),
-  'end_date': '2022-11-30'
+  'start_date':  past_date.toLocaleString(),
+  'end_date': current_date.toLocaleString()
 }
 
 const range = JSON.stringify(date_range)
