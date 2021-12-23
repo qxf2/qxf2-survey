@@ -3,23 +3,27 @@ import URL from "./urlConf";
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
-var data = [];
+var score = [];
+var employee_name = [];
 
+axios.get(`${URL}/survey/admin/symmetry-score`)
+.then(function (response) {
 
-axios.get(`${URL}/survey/admin/employees`)
-  .then(function (response) {
-    for (var i in response.data)
-    {
-      if (response.data[i]['status'].toLowerCase() === "y"){
-      data.push(response.data[i]['fullName']);
-    }}
-  })
-  .catch(function (error) {
-    console.log(error.response);
-  });
+  for(var name in response.data['employee_name']){
+    employee_name.push(response.data['employee_name'][name]);
+  }
+
+  for(var value in response.data['data']){
+    score.push(response.data['data'][value]);
+  }  
+
+})
+.catch(function (error) {
+  console.log(error.response);
+});
 
 const SymmetryData = {
-  labels: data,
+  labels: employee_name,
   datasets: [
     {
       label: "Symmetry Score",
@@ -28,7 +32,7 @@ const SymmetryData = {
       borderWidth: 1,
       hoverBackgroundColor: 'blue',
       hoverBorderColor: 'black',
-      data: [234, 212, 110, 107, 67, 55, 16]
+      data: score
     }
   ]
 };

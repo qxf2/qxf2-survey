@@ -90,6 +90,7 @@ def get_symmetry_score(start_date, end_date, responses, active_employees):
 
     error="No data found for this search"
     #who helped you
+    print(responses)
     rbd_helped_you=responses[(responses.date >= startdate)&(responses.date <= enddate)&(responses.question_no==1) &(responses.answer.isin(emp_name.name))].groupby(responses.answer).size()
     rbd_helped_you=normalize_scores(rbd_helped_you)
     #whom did you help
@@ -103,6 +104,7 @@ def get_symmetry_score(start_date, end_date, responses, active_employees):
         rbd_symmetry_score[help_name]=help_score*100.0/rbd_you_helped[help_name]
         name.append(help_name)
         score.append(rbd_symmetry_score[help_name])
+
     employee_name=[employee_name for _,employee_name in sorted(zip(score,name),reverse=True)]
     score.sort(reverse=True)
 
@@ -110,6 +112,7 @@ def get_symmetry_score(start_date, end_date, responses, active_employees):
         overall_symmetry_score={"employee_name":  employee_name, "data":score,"error":" "}
     else:
         overall_symmetry_score={"employee_name":  employee_name, "data":score,"error":error}
+
 
     return overall_symmetry_score
 
@@ -129,4 +132,38 @@ def get_max_score(my_dict):
             max_score = val
 
     return max_score
+
+def get_response_rate(startdate,enddate,responses,userid,user_list):
+    "Get the overall response rate for the date range"
+
+    responses = pd.DataFrame(responses)
+    userid = pd.DataFrame(userid)
+    user_list = pd.DataFrame(user_list)
+
+    error="No data found for this search"   
+    #responses table date within date range and for active employees
+    options=userid['id']
+    userlist=user_list
+    #survey data in the data range for current active users 
+    survey_data_inrange=responses[(responses.date >= startdate)&(responses.date <= enddate) &(responses.respondent_id.isin(options))]
+    response_rate={}
+    emp_name=[]
+    response_data=[]
+    #iterating through users and finding their total surveys and if their first survey is before or within selected date range and calculating total surveys for each user
+    for index,row in userlist.iterrows():
+        surveys_taken=survey_data_inrange[survey_data_inrange.respondent_id==row['id']].groupby(['date']).size().count()
+        first_survey_date=survey_data_inrange[survey_data_inrange.respondent_id==row['id']]['date'].min()
+        total_surveys=responses[(responses.date >= first_survey_date)&(responses.date <= enddate)].date.nunique() 
+        if (surveys_taken !=0 and total_surveys !=0):
+            resp_rate=(surveys_taken*100)/total_surveys
+            emp_name.append(row['name'])
+            response_data.append(resp_rate)
+    employee_name=[employee_name for _,employee_name in sorted(zip(response_data,emp_name),reverse=True)]
+    response_data.sort(reverse=True)    
+    if len(employee_name) != 0 :
+        overall_response_rate={"name":employee_name,"response_data":response_data,"error":" "}
+    else:   
+        overall_response_rate={ "name":employee_name,"response_data":response_data,"error":error}
+
+    return overall_response_rate
 

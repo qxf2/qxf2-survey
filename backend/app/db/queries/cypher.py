@@ -44,8 +44,16 @@ GET_ACTIVE_USER_ID =  "MATCH (e:Employees)\
                        RETURN e.ID"
 
 GET_ACTIVE_USER_NAME =  "MATCH (e:Employees)\
-                         WHERE e.status='Y'\
+                         WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
                          RETURN e.fullName as name"
+
+GET_ACTIVE_USER_LIST = "MATCH (e:Employees)\
+                        WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
+                        RETURN e.fullName as name, e.ID as id"
+
+GET_ACTIVE_USER_IDS  =   "MATCH (e:Employees)\
+                          WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
+                          RETURN e.ID as id"
 
 SET_GIVEN_PROP = "MATCH (a:Employees { fullName: $user_name })-[r:GIVEN]->(b:Employees { fullName: $helped_name })\
                   WHERE NOT EXISTS(r.helpgiven) OR NOT $date in r.helpgiven\
