@@ -50,6 +50,7 @@ function ConfirmationPage(props) {
         if (surveyResponse !== "") {
           axios.post(`${url_conf}/survey/response`, {data: surveyResponse})
             .then(function (response) {
+              console.log(surveyResponse)
               console.log("Post request: Success")
             })
             .catch(function (error) {
