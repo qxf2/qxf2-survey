@@ -61,6 +61,17 @@ def delete_employee(id: int,  authenticated: bool = Depends(security.validate_re
     except:
         return {"msg": f"Unable to delete employee with id {id}"}
 
+@router.post('/get_employee_by_email')
+def get_employee_by_email(email: schemas.EmployeeEmail, 
+                          authenticated: bool = Depends(security.validate_request)):
+    "Return employee details by email"
+    employee_email = email.email
+    employee_details = GRAPH.run(cypher.GET_USER_BY_EMAIL,
+                             parameters={"email":str(employee_email)}).data()
+    if not employee_details:
+        return "Employee does not exist"
+    else:
+        return employee_details
 
 @router.get('/not_responded_users')
 def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate_request)):

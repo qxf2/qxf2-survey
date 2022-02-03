@@ -43,6 +43,10 @@ GET_ACTIVE_USER_ID =  "MATCH (e:Employees)\
                        WHERE e.status='Y'\
                        RETURN e.ID"
 
+GET_USER_BY_EMAIL = "MATCH (e:Employees)\
+                     WHERE e.email=$email\
+                     RETURN e AS employee_details"
+
 GET_ACTIVE_USER_NAME =  "MATCH (e:Employees)\
                          WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
                          RETURN e.fullName as name"
