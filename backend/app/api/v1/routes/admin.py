@@ -60,6 +60,8 @@ def get_new_employee_data(user: schemas.EmployeeRegistration,\
     "creates the new user node in the neo4j upon new employee registration"
     emp_data = user.data
     last_user_id = get_user_id(email=None)
+    print("Test message")
+    print(last_user_id)
     new_employee = Node("Employees",
                          ID=int(last_user_id)+1,
                          firstName=emp_data["firstName"],

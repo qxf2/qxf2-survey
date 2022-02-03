@@ -126,7 +126,7 @@ const EmployeeTable = () => {
 
 
     const renderHeader = () => {
-        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email','operation']
+        let headerElement = ['ID', 'first_name', 'last_name', 'active_flag', 'email']
         return headerElement.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
@@ -141,9 +141,6 @@ const EmployeeTable = () => {
                     <td>{lastName}</td>
                     <td>{status}</td>
                     <td>{email}</td>
-                    <td className='operation'>
-                        <button className='button' onClick={() => removeData(ID)}>Delete</button>
-                    </td>
                 </tr>
             )
         })
@@ -177,17 +174,16 @@ const ToRespond = () => {
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     const renderHeader = () => {
-        let headerElement = ['ID', 'Name']
+        let headerElement = ['Name']
         return headerElement.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
     }
 
     const renderBody = () => {
-        return employees && employees.map(({ ID, firstName, lastName}) => {
+        return employees && employees.map(({firstName, lastName}) => {
             return (
-                <tr key={ID}>
-                    <td>{ID}</td>
+                <tr>
                     <td>{firstName} {lastName}</td>
                 </tr>
             )
