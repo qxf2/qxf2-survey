@@ -20,8 +20,8 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PROD_KEY }}
-        source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
-        target: "/home/runner/work/qxf2-survey/qxf2-survey/backup/"
+        source: "survey_db_backup/neo4j-20220210.dump"
+        target: "/home/runner/work/qxf2-survey/qxf2-survey/backup/test.dump"
     - name: list files again
       run: |
         pwd
