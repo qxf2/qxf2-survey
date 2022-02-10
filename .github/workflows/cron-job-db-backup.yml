@@ -9,15 +9,17 @@ jobs:
     steps:
     - name: list files
       run: |
+        mkdir backup
         ls -al
+        pwd
+        cd backup
+        pwd      
     - name: copy file via ssh key
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PROD_KEY }}
-        script:  |
-          pwd
         source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
         target: "survey_db.dump"
 
