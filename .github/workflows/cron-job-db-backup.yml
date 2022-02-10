@@ -14,8 +14,20 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PROD_KEY }}
           script:  |
-            sudo rm /home/ubuntu/survey_db_backup/survey_db.dump
             sudo service neo4j stop
+            sudo neo4j-admin check-consistency --database=neo4j --report-dir=/home/ubuntu/survey_db_backup/report
+            DIR="/home/ubuntu/survey_db_backup/report"
+            if [ -d "$DIR" ]
+            then
+              if [ "$(ls -A $DIR)" ]; then
+                echo "Take action $DIR is not Empty"
+              else
+                echo "$DIR is Empty"
+              fi
+            else
+              echo "Directory $DIR not found."
+            fi          
+            sudo rm /home/ubuntu/survey_db_backup/survey_db.dump
             sudo neo4j-admin dump --database=neo4j --to=/home/ubuntu/survey_db_backup/survey_db.dump
             ls /home/ubuntu/survey_db_backup
             sudo service neo4j start
