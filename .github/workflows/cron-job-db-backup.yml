@@ -7,6 +7,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: list files
+      run: |
+        ls -al
     - name: copy file via ssh key
       uses: appleboy/scp-action@master
       with:
@@ -17,7 +20,5 @@ jobs:
           pwd
         source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
         target: "survey_db.dump"
-    - name: list files
-      run: |
-        ls -al
+
         
