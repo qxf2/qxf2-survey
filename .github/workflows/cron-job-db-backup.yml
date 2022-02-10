@@ -13,6 +13,8 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PROD_KEY }}
+        script:  |
+          pwd
         source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
         target: "survey_db.dump"
     - name: list files
