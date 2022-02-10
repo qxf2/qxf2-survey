@@ -27,7 +27,7 @@ jobs:
         port: ${{ secrets.PORT }}
         key: ${{ secrets.PROD_KEY }}  
         source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
-        target: "survey_db_backup.dump"
+        target: "/home/"
     - name: list files in directory
       run: |
         ls -a
