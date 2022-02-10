@@ -1,13 +1,12 @@
 name: Survey Backup
 on:
-  push:
-    branches:
-      - backup-neo4j-on-s3
+  schedule:
+    - cron: "0 0 * * *"   
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH to EC2 instance
+      - name: SSH to EC2 instance and create survey database backup
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -34,7 +33,7 @@ jobs:
               sudo service neo4j start
             fi          
 
-      - name: Check out repository
+      - name: Copy the backup file from Ec2 instance
         uses: actions/checkout@master
       - name: Download file via SSH
         uses: nicklasfrahm/scp-action@main
@@ -47,12 +46,13 @@ jobs:
           source: "/home/ubuntu/survey_db_backup/survey_db.dump"
           target: "survey_db_backup.dump"
 
-      - name: list files again
+      - name: Move the backup file into a new directory
         run: |
           pwd
           mkdir backup
           mv survey_db_backup.dump backup
           ls backup/
+          
       - name: Connect s3 bucket
         uses: jakejarvis/s3-sync-action@master
         env:
