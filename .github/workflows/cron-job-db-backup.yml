@@ -1,0 +1,21 @@
+name: Survey Backup
+on:
+  push:
+    branches:
+      - backup-neo4j-on-s3
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: SSH to EC2 instance
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PROD_KEY }}
+        script:  |
+          sudo service neo4j stop
+          today=$(date +"%Y%m%d")
+          filename="neo4j-$today.dump"
+          sudo neo4j-admin dump --database=neo4j --to=/home/ubuntu/survey_db_backup/$filename
+          ls /home/ubuntu/survey_db_backup
