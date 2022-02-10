@@ -19,15 +19,16 @@ jobs:
           filename="neo4j-$today.dump"
           sudo neo4j-admin dump --database=neo4j --to=/home/ubuntu/survey_db_backup/$filename
           ls /home/ubuntu/survey_db_backup
-    - name: Download backup file
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        port: ${{ secrets.PORT }}
-        key: ${{ secrets.PROD_KEY }}  
-        source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
-        target: "/home/"
-    - name: list files in directory
-      run: |
-        ls -a
+      - name: Download file via SSH
+        uses: nicklasfrahm/scp-action@main
+        with:
+          direction: download
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PROD_KEY }}
+          port: ${{ secrets.port }}
+          source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
+          target: "survey_db_backup.dump"
+      - name: list files
+        run: |
+          ls -al
