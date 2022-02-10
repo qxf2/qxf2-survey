@@ -26,6 +26,9 @@ jobs:
           mkdir backup
           ls
           mv survey_db_backup.dump backup
+          cd backup
+          pwd
+          ls -l *   
       - name: Connect s3 bucket
         uses: jakejarvis/s3-sync-action@master
         env:
