@@ -7,26 +7,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: list files
-      run: |
-        mkdir backup
-        ls -al
-        pwd
-        cd backup
-        pwd      
-    - name: copy file via ssh key
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PROD_KEY }}
-        source: "survey_db_backup/neo4j-20220210.dump"
-        target: "test.dump"
-    - name: list files again
-      run: |
-        pwd
-        cd backup
-        pwd
-        ls 
+      - name: Check out repository
+        uses: actions/checkout@master
+      - name: Download file via SSH
+        uses: nicklasfrahm/scp-action@main
+        with:
+          direction: download
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PROD_KEY }}
+          insecure_ignore_fingerprint: true
+          source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
+          target: "survey_db_backup.dump"
+
+      - name: list files again
+        run: |
+          pwd
+          ls
 
         
