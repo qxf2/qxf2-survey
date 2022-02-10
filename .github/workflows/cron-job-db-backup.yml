@@ -26,7 +26,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PROD_KEY }}
-        port: ${{ secrets.port }}
         source: "/home/ubuntu/survey_db_backup/neo4j-20220210.dump"
         target: "survey_db_backup.dump"
     - name: list files
