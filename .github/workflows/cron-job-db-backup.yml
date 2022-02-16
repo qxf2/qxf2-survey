@@ -67,24 +67,25 @@ jobs:
             SOURCE_DIR: '/home/runner/work/qxf2-survey/qxf2-survey/backup'
 
   run-if-failed:
-    runs-on: ubuntu-latest
-    needs: [job1]
-    if: always() && (needs.job1.result == 'failure')
-    steps:
-      - name: Copy the inconsistency report from EC2 instance to container
-        uses: actions/checkout@master
-      - name: Download file via SSH
-        uses: nicklasfrahm/scp-action@main
-        with:
-          direction: download
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PROD_KEY }}
-          insecure_ignore_fingerprint: true
-          source: "/home/ubuntu/survey_db_backup/report/*"
-          target: "report/"
+    deploy:
+      runs-on: ubuntu-latest
+      needs: [job1]
+      if: always() && (needs.job1.result == 'failure')
+      steps:
+        - name: Copy the inconsistency report from EC2 instance to container
+          uses: actions/checkout@master
+        - name: Download file via SSH
+          uses: nicklasfrahm/scp-action@main
+          with:
+            direction: download
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.PROD_KEY }}
+            insecure_ignore_fingerprint: true
+            source: "/home/ubuntu/survey_db_backup/report/*"
+            target: "report/"
 
-      - name: Move the backup file into a new directory
-        run: |
-          pwd
-          ls -a
+        - name: Move the backup file into a new directory
+          run: |
+            pwd
+            ls -a
