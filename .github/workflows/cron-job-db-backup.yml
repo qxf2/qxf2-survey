@@ -67,9 +67,9 @@ jobs:
             SOURCE_DIR: '/home/runner/work/qxf2-survey/qxf2-survey/backup'
 
   run-if-failed:
-    deploy:
-      runs-on: ubuntu-latest
+      name: "run if initial job failed"
       needs: [job1]
+      runs-on: ubuntu-latest
       if: always() && (needs.job1.result == 'failure')
       steps:
         - name: Copy the inconsistency report from EC2 instance to container
