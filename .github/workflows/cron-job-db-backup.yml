@@ -1,8 +1,7 @@
 name: Survey Backup
 on:
-  push:
-    branches:
-      - backup-neo4j-on-s3
+  schedule:
+    - cron: "0 0 * * *"
 jobs:
   database-backup:
     runs-on: ubuntu-latest
