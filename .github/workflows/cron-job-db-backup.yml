@@ -5,7 +5,7 @@ on:
       - backup-neo4j-on-s3
 
 jobs:
-  job1:
+  database-backup:
     runs-on: ubuntu-latest
     steps:
       - name: SSH to EC2 instance and create survey database backup
@@ -67,13 +67,13 @@ jobs:
 
   run-if-failed:
       name: "run if initial job failed"
-      needs: [job1]
+      needs: [database-backup]
       runs-on: ubuntu-latest
-      if: always() && (needs.job1.result == 'failure')
+      if: always() && (needs.database-backup.result == 'failure')
       steps:
         - name: Copy the inconsistency report from EC2 instance to container
           uses: actions/checkout@master
-        - name: Download file via SSH
+        - name: Download inconsistency report via SSH
           uses: nicklasfrahm/scp-action@main
           with:
             direction: download
@@ -84,7 +84,27 @@ jobs:
             source: "/home/ubuntu/survey_db_backup/report/*"
             target: "inconsistency_report.txt"
 
-        - name: Move the backup file into a new directory
+        - name: Move the report into a new directory
           run: |
             pwd
             ls -a
+            mkdir reports
+            mv inconsistency_report.txt reports
+
+        - name: Connect s3 bucket and save the report
+          uses: jakejarvis/s3-sync-action@master
+          env:
+            AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: 'us-east-2'   # optional: defaults to us-east-1
+            SOURCE_DIR: '/home/runner/work/qxf2-survey/qxf2-survey/reports'
+
+        - name: SSH to EC2 instance and delete the report
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.PROD_KEY }}
+            script:  |
+              sudo rm /home/ubuntu/survey_db_backup/report/*
