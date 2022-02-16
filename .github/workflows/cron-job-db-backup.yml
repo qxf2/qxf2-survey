@@ -1,7 +1,8 @@
 name: Survey Backup
 on:
-  schedule:
-    - cron: "0 0 * * *"   
+  push:
+    branches:
+      - backup-neo4j-on-s3
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,6 +22,7 @@ jobs:
               if [ "$(ls -A $DIR)" ]; then
                 echo "Take action $DIR is not Empty, which means there are inconsistencies in the database"
                 sudo service neo4j start
+                exit 1
               else
                 echo "$DIR is Empty which means there are no inconsistencies"
                 sudo rm /home/ubuntu/survey_db_backup/survey_db.dump
