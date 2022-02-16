@@ -6,65 +6,64 @@ on:
 
 jobs:
   job1:
-    deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: SSH to EC2 instance and create survey database backup
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.PROD_KEY }}
-            script:  |
-              sudo service neo4j stop
-              sudo neo4j-admin check-consistency --database=neo4j --report-dir=/home/ubuntu/survey_db_backup/report
-              DIR="/home/ubuntu/survey_db_backup/report"
-              if [ -d "$DIR" ]
-              then
-                if [ "$(ls -A $DIR)" ]; then
-                  echo "Take action $DIR is not Empty, which means there are inconsistencies in the database"
-                  sudo service neo4j start
-                  exit 1
-                else
-                  echo "$DIR is Empty which means there are no inconsistencies"
-                  sudo rm /home/ubuntu/survey_db_backup/survey_db.dump
-                  sudo neo4j-admin dump --database=neo4j --to=/home/ubuntu/survey_db_backup/survey_db.dump
-                  ls /home/ubuntu/survey_db_backup
-                  sudo service neo4j start
-                fi
-              else
-                echo "Directory $DIR not found."
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to EC2 instance and create survey database backup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PROD_KEY }}
+          script:  |
+            sudo service neo4j stop
+            sudo neo4j-admin check-consistency --database=neo4j --report-dir=/home/ubuntu/survey_db_backup/report
+            DIR="/home/ubuntu/survey_db_backup/report"
+            if [ -d "$DIR" ]
+            then
+              if [ "$(ls -A $DIR)" ]; then
+                echo "Take action $DIR is not Empty, which means there are inconsistencies in the database"
                 sudo service neo4j start
-              fi          
+                exit 1
+              else
+                echo "$DIR is Empty which means there are no inconsistencies"
+                sudo rm /home/ubuntu/survey_db_backup/survey_db.dump
+                sudo neo4j-admin dump --database=neo4j --to=/home/ubuntu/survey_db_backup/survey_db.dump
+                ls /home/ubuntu/survey_db_backup
+                sudo service neo4j start
+              fi
+            else
+              echo "Directory $DIR not found."
+              sudo service neo4j start
+            fi          
 
-        - name: Copy the backup file from Ec2 instance
-          uses: actions/checkout@master
-        - name: Download file via SSH
-          uses: nicklasfrahm/scp-action@main
-          with:
-            direction: download
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.PROD_KEY }}
-            insecure_ignore_fingerprint: true
-            source: "/home/ubuntu/survey_db_backup/survey_db.dump"
-            target: "survey_db_backup.dump"
+      - name: Copy the backup file from Ec2 instance
+        uses: actions/checkout@master
+      - name: Download file via SSH
+        uses: nicklasfrahm/scp-action@main
+        with:
+          direction: download
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PROD_KEY }}
+          insecure_ignore_fingerprint: true
+          source: "/home/ubuntu/survey_db_backup/survey_db.dump"
+          target: "survey_db_backup.dump"
 
-        - name: Move the backup file into a new directory
-          run: |
-            pwd
-            mkdir backup
-            mv survey_db_backup.dump backup
-            ls backup/
-            
-        - name: Connect s3 bucket
-          uses: jakejarvis/s3-sync-action@master
-          env:
-            AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_REGION: 'us-east-2'   # optional: defaults to us-east-1
-            SOURCE_DIR: '/home/runner/work/qxf2-survey/qxf2-survey/backup'
+      - name: Move the backup file into a new directory
+        run: |
+          pwd
+          mkdir backup
+          mv survey_db_backup.dump backup
+          ls backup/
+          
+      - name: Connect s3 bucket
+        uses: jakejarvis/s3-sync-action@master
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-2'   # optional: defaults to us-east-1
+          SOURCE_DIR: '/home/runner/work/qxf2-survey/qxf2-survey/backup'
 
   run-if-failed:
       name: "run if initial job failed"
