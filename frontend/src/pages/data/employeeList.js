@@ -16,7 +16,7 @@ axios.get(`${URL}/survey/admin/employees`)
       else if(response.data[i]['status'].toLowerCase() === "y" && response.data[i]['email'] ==="test@qxf2.com"){
       data.push({label: "External", value: "dummy@qxf2.com"})
       }
-  }console.log(data)
+  }
   })
   .catch(function (error) {
     console.log(error.response);

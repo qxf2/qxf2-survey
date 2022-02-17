@@ -38,7 +38,6 @@ function ConfirmationPage(props) {
     if(Loader===false){
 
       var valid_email=check_valid_email()
-      console.log(whoHelp)
       if(valid_email===true){
         var surveyResponse = {
           'userMail': email,
