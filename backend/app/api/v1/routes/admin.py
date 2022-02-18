@@ -73,6 +73,23 @@ def get_employee_by_email(email: schemas.EmployeeEmail,
     else:
         return employee_details
 
+@router.post('/update_employee_status')
+def set_employee_status(email: schemas.EmployeeEmail, status: schemas.EmployeeStatus,
+                          authenticated: bool = Depends(security.validate_request)):
+    "Return employee details by email"
+    employee_email = email.email
+    employee_status = status.employee_status
+    if employee_status.upper() == "Y" or employee_status.upper() == "N":
+        try:
+            update_employee_status = GRAPH.run(cypher.SET_USER_STATUS,
+                                    parameters={"email":str(employee_email),"status":str(employee_status)}).data()
+            return{f"Successfully updated status of employee with email {employee_email}"}
+        except:
+            return{f"Unable to set status of employee with email {employee_email}"}
+    else:
+        return "Please enter either Y or N as status"
+
+
 @router.get('/not_responded_users')
 def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate_request)):
     "returns a list of employee who are yet to respond to the survey"
