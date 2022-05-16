@@ -1,6 +1,7 @@
 import React,{ useState, useEffect } from "react";
 import axios from "axios";
 import url_conf from "./data/urlConf"
+import employeeList from "./data/employeeList.js";
 
 axios.defaults.headers.common['User'] = process.env.REACT_APP_API_KEY
 
@@ -13,11 +14,9 @@ function ConfirmationPage(props) {
   const [Loader, setLoader]=useState(true)
 
   useEffect(() =>{
-    axios.get(`${url_conf}/survey/admin/employees`)
-    .then(response=>{
-      setemployees_data(response.data)
+      setemployees_data(employeeList)
       setLoader(false)
-    })
+    
   },[])
 
   var check_valid_email=()=>{
@@ -25,7 +24,7 @@ function ConfirmationPage(props) {
     var i=0
     for(i=0;i<=employees_data.length-1;i++)
     {
-      if(employees_data[i]['email']===email)
+      if(employees_data[i]['value']===email)
       {
         valid_email_flag=true
         break;
@@ -50,6 +49,7 @@ function ConfirmationPage(props) {
         if (surveyResponse !== "") {
           axios.post(`${url_conf}/survey/response`, {data: surveyResponse})
             .then(function (response) {
+              console.log(surveyResponse)
               console.log("Post request: Success")
             })
             .catch(function (error) {

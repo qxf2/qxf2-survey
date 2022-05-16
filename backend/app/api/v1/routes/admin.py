@@ -20,16 +20,38 @@ from decouple import config
 import secrets
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 import json
+from db.queries import graphql_queries 
+import requests as req
 
 router = APIRouter()
 GRAPH = db.auth()
+
+BASE_URL = 'https://qxf2-employees.qxf2.com/graphql'
+
+def authenticate():
+    "Return an authenticate code"
+    auth_query = graphql_queries.authorise
+
+    response = req.post(url = BASE_URL, json = {'query': auth_query})
+
+    return response.json().get('data',{}).get('auth',{}).get('accessToken',None)
 
 @router.get('/employees')
 def get_employee_data(authenticated: bool = Depends(security.validate_request)):
     "returns the employee details"
 
-    employee_data=list(GRAPH.run(cypher.GET_ALL_USERS))
-    employee_list = [employee[0] for employee in employee_data]
+    fetch_employees = graphql_queries.fetch_employees
+    access_token = authenticate()
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = req.get(url = BASE_URL, json = {'query': fetch_employees}, headers =\
+        headers)
+    all_employees = response.json().get('data', {}).get('allEmployees', {}).get('edges', [])
+    employee_list=[]
+    for employee in all_employees:
+        fullname = employee['node']['firstName'] + " " + employee['node']['lastName']
+        employee['node']['fullName'] = fullname
+        employee_list.append(employee['node'])
+    
     return employee_list
 
 @router.post('/new_employee')
@@ -38,6 +60,7 @@ def get_new_employee_data(user: schemas.EmployeeRegistration,\
     "creates the new user node in the neo4j upon new employee registration"
     emp_data = user.data
     last_user_id = get_user_id(email=None)
+    print(last_user_id)
     new_employee = Node("Employees",
                          ID=int(last_user_id)+1,
                          firstName=emp_data["firstName"],
@@ -72,6 +95,23 @@ def get_employee_by_email(email: schemas.EmployeeEmail,
         return "Employee does not exist"
     else:
         return employee_details
+
+@router.post('/update_employee_status')
+def set_employee_status(email: schemas.EmployeeEmail, status: schemas.EmployeeStatus,
+                          authenticated: bool = Depends(security.validate_request)):
+    "Return employee details by email"
+    employee_email = email.email
+    employee_status = status.employee_status
+    if employee_status.upper() == "Y" or employee_status.upper() == "N":
+        try:
+            update_employee_status = GRAPH.run(cypher.SET_USER_STATUS,
+                                    parameters={"email":str(employee_email),"status":str(employee_status)}).data()
+            return{f"Successfully updated status of employee with email {employee_email}"}
+        except:
+            return{f"Unable to set status of employee with email {employee_email}"}
+    else:
+        return "Please enter either Y or N as status"
+
 
 @router.get('/not_responded_users')
 def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate_request)):
