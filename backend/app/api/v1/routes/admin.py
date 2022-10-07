@@ -8,7 +8,7 @@ from datetime import datetime , timedelta, date
 from dateutil.relativedelta import relativedelta, FR
 from fastapi import APIRouter, Depends, Form, HTTPException
 from py2neo import Node
-from ..dependencies.employee import get_user_id, get_not_responded_user_emails, get_symmetry_score, get_response_rate
+from ..dependencies.employee import get_user_id, get_not_responded_user_emails
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(\
                                                    os.path.abspath(__file__))))))
 from core import security
@@ -96,6 +96,22 @@ def get_employee_by_email(email: schemas.EmployeeEmail,
         return "Employee does not exist"
     else:
         return employee_details
+
+@router.post('/update_employee_status')
+def set_employee_status(email: schemas.EmployeeEmail, status: schemas.EmployeeStatus,
+                          authenticated: bool = Depends(security.validate_request)):
+    "Return employee details by email"
+    employee_email = email.email
+    employee_status = status.employee_status
+    if employee_status.upper() == "Y" or employee_status.upper() == "N":
+        try:
+            update_employee_status = GRAPH.run(cypher.SET_USER_STATUS,
+                                    parameters={"email":str(employee_email),"status":str(employee_status)}).data()
+            return{f"Successfully updated status of employee with email {employee_email}"}
+        except:
+            return{f"Unable to set status of employee with email {employee_email}"}
+    else:
+        return "Please enter either Y or N as status"
 
 @router.get('/not_responded_users')
 def get_employees_yet_to_respond(authenticated: bool = Depends(security.validate_request)):
@@ -194,37 +210,6 @@ def admin_login(idtoken: str = Form(...),
         # Invalid token
         return ValueError
 
-@router.get('/symmetry-score')
-def symmetry_score(authenticated: bool = Depends(security.validate_request)):
-    "Get symmetery score"
-
-    active_employees = GRAPH.run(cypher.GET_ACTIVE_USER_NAME).data()
-    end_date=str(date.today())
-
-    #3/6months from today For 3months set days = 90 , 6 months = 180
-    start_date=str(date.today() - timedelta(days=90))
-    response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
-                              parameters={"start_date":str(start_date),
-                              "end_date":str(end_date)}).data()
-
-    score = get_symmetry_score(start_date, end_date, response, active_employees)
-
-    return score
-
-@router.get('/overall_response')
-def overall_response(authenticated: bool = Depends(security.validate_request)):
-    "Get overall response rate"
-
-    active_user_list = GRAPH.run(cypher.GET_ACTIVE_USER_LIST).data()
-    active_user_id = GRAPH.run(cypher.GET_ACTIVE_USER_IDS).data()
-    end_date=str(date.today())
-    start_date=str(date.today() - timedelta(days=90))
-    response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
-                            parameters={"start_date":str(start_date),
-                            "end_date":str(end_date)}).data()
-    score = get_response_rate(start_date, end_date, response, active_user_id, active_user_list)
-
-    return score
 
 
 

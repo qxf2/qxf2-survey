@@ -27,3 +27,7 @@ class FetchResponses(BaseModel):
 class EmployeeEmail(BaseModel):
     "request body"
     email: str
+
+class EmployeeStatus(BaseModel):
+    "request body"
+    employee_status: str
