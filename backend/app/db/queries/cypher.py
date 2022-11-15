@@ -156,3 +156,33 @@ QELO_TECHNOLOGY_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Technology)\
                                  WITH DISTINCT[m.ID,n.technology_name,learn] AS\
                                  output RETURN output[0] AS respondent_id,\
                                  output[1] AS technology,output[2] AS date"
+
+QELO_RESPONSE_BETWEEN_DATES_OPTMIZED = "MATCH (m:Employees)-[r]->(n:Employees) WITH\
+                                        CASE type(r)\
+                                        WHEN 'GIVEN' THEN r.helpgiven\
+                                        WHEN 'TAKEN' THEN r.helptaken\
+                                        END AS dates\
+                                        WITH dates UNWIND dates AS helpdate\
+                                        WITH DISTINCT(helpdate)\
+                                        WHERE date(helpdate)>=date($start_date)\
+                                        AND date(helpdate)<=date($end_date)\
+                                        MATCH (m:Employees)-[r]->(n:Employees)\
+                                        WHERE helpdate in r.helpgiven\
+                                        OR helpdate in r.helptaken\
+                                        WITH distinct [m.ID,helpdate,CASE type(r)\
+                                        WHEN 'TAKEN' THEN 1\
+                                        WHEN 'GIVEN' THEN 2\
+                                        END,n.fullName] as output\
+                                        RETURN output[0] AS respondent_id, output[1] AS date,\
+                                        output[2] AS question_no, output[3] AS answer"
+
+QELO_TECHNOLOGY_BETWEEN_DATES_OPTIMIZED =   "MATCH (m:Employees)-[r]->(n:Technology)\
+                                            UNWIND r.learnt_dates\
+                                            AS learn WITH distinct(learn)\
+                                            WHERE date(learn)>=date($start_date)\
+                                            AND date(learn)<=date($end_date)\
+                                            MATCH (m:Employees)-[r]->(n:Technology)\
+                                            WHERE learn in r.learnt_dates\
+                                            WITH DISTINCT[m.ID,n.technology_name,learn] AS\
+                                            output RETURN output[0] AS respondent_id,\
+                                            output[1] AS technology,output[2] AS date"
