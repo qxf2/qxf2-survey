@@ -39,7 +39,7 @@ GET_USER_NAME = "MATCH (e:Employees)\
 GET_USER_ID = "MATCH (e:Employees)\
                RETURN e.ID, e.email"
 
-GET_ACTIVE_USER_ID =  "MATCH (e:Employees)\
+GET_ACTIVE_USER_ID = "MATCH (e:Employees)\
                        WHERE e.status='Y'\
                        RETURN e.ID"
 
@@ -51,7 +51,7 @@ SET_USER_STATUS = "MATCH (e:Employees)\
                    WHERE e.email=$email\
                    SET e.status=$status"
 
-GET_ACTIVE_USER_NAME =  "MATCH (e:Employees)\
+GET_ACTIVE_USER_NAME = "MATCH (e:Employees)\
                          WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
                          RETURN e.fullName as name"
 
@@ -59,7 +59,7 @@ GET_ACTIVE_USER_LIST = "MATCH (e:Employees)\
                         WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
                         RETURN e.fullName as name, e.ID as id"
 
-GET_ACTIVE_USER_IDS  =   "MATCH (e:Employees)\
+GET_ACTIVE_USER_IDS = "MATCH (e:Employees)\
                           WHERE e.status='Y' AND NOT e.firstName IN ['','External','Edward','Shrihari','Kavitha']\
                           RETURN e.ID as id"
 
@@ -102,11 +102,13 @@ GET_ALL_USERS = "MATCH (e:Employees)\
 
 GET_USERS_BY_ID = "MATCH (e:Employees { ID: $id }) RETURN e"
 
-CHECK_IF_RESPONDED = ["MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date in x.helpgiven return a.ID",
-                      "MATCH (a:Employees)-[y:TAKEN]->(b:Employees) WHERE $date in y.helptaken return a.ID",
-                      "MATCH (a:Employees)-[z:KNOWS]-(b:Technology) WHERE $date in z.learnt_dates return a.ID"]
+CHECK_IF_RESPONDED = [
+    "MATCH (a:Employees)-[x:GIVEN]->(b:Employees) WHERE $date in x.helpgiven return a.ID",
+    "MATCH (a:Employees)-[y:TAKEN]->(b:Employees) WHERE $date in y.helptaken return a.ID",
+    "MATCH (a:Employees)-[z:KNOWS]-(b:Technology) WHERE $date in z.learnt_dates return a.ID",
+]
 
-TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK =  "MATCH (a:Employees)-[z:KNOWS]-(b:Technology)\
+TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK = "MATCH (a:Employees)-[z:KNOWS]-(b:Technology)\
                                            WHERE $date_monday in z.learnt_dates OR $date_friday in z.learnt_dates\
                                            WITH DISTINCT[a.fullName,b.technology_name] AS output\
                                            RETURN output[0] AS Name,output[1] AS Technology"
@@ -127,32 +129,31 @@ QELO_RESPONSE = "MATCH (m:Employees)-[r]->(n:Employees) RETURN m.ID AS responden
 	             WHEN 'GIVEN' THEN 2\
                  END AS question_no, n.fullName as answer"
 
-QELO_RESPONSE_BETWEEN_DATES =  "MATCH (m:Employees)-[r]->(n:Employees)\
-                                UNWIND [r.helpgiven,r.helptaken] AS list_helpdates\
-                                UNWIND list_helpdates as helpdate\
-                                WITH DISTINCT(helpdate)\
-                                WHERE date(helpdate)>=date($start_date)\
-                                AND date(helpdate)<=date($end_date)\
-                                MATCH (m:Employees)-[r]->(n:Employees)\
-                                WHERE helpdate in r.helpgiven\
-                                OR helpdate in r.helptaken\
-                                WITH distinct [m.ID,helpdate,CASE type(r)\
-                                WHEN 'TAKEN' THEN 1\
-                                WHEN 'GIVEN' THEN 2\
-                                END,n.fullName] as output\
-                                RETURN output[0] AS respondent_id, output[1] AS date,\
-                                output[2] AS question_no, output[3] AS answer"
+#Query to get responses between two given dates
+QELO_RESPONSE_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Employees)\
+                                    UNWIND [r.helpgiven,r.helptaken] AS list_helpdates\
+                                    UNWIND list_helpdates AS helpdate\
+                                    WITH DISTINCT(helpdate)\
+                                    WHERE date(helpdate)>=date($start_date)\
+                                    AND date(helpdate)<=date($end_date)\
+                                    MATCH (m:Employees)-[r]->(n:Employees)\
+                                    WHERE helpdate IN r.helpgiven\
+                                    OR helpdate IN r.helptaken\
+                                    WITH DISTINCT[m.ID,helpdate,CASE type(r)\
+                                    WHEN 'TAKEN' THEN 1\
+                                    WHEN 'GIVEN' THEN 2\
+                                    END,n.fullName] AS output\
+                                    RETURN output[0] AS respondent_id, output[1] AS date,\
+                                    output[2] AS question_no, output[3] AS answer"
 
-
-QELO_TECHNOLOGY_BETWEEN_DATES =    "MATCH (m:Employees)-[r]->(n:Technology)\
+#Query to get  technologies learnt between two given dates
+QELO_TECHNOLOGY_BETWEEN_DATES = "MATCH (m:Employees)-[r]->(n:Technology)\
                                     UNWIND r.learnt_dates\
-                                    AS learn WITH distinct(learn)\
-                                    WHERE date(learn)>=date($start_date)\
-                                    AND date(learn)<=date($end_date)\
+                                    AS learnt_date WITH DISTINCT(learnt_date)\
+                                    WHERE date(learnt_date)>=date($start_date)\
+                                    AND date(learnt_date)<=date($end_date)\
                                     MATCH (m:Employees)-[r]->(n:Technology)\
-                                    WHERE learn in r.learnt_dates\
-                                    WITH DISTINCT[m.ID,n.technology_name,learn] AS\
+                                    WHERE learnt_date IN r.learnt_dates\
+                                    WITH DISTINCT[m.ID,n.technology_name,learnt_date] AS\
                                     output RETURN output[0] AS respondent_id,\
                                     output[1] AS technology,output[2] AS date"
-
-                                    
