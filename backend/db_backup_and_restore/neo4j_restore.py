@@ -21,13 +21,13 @@ USERNAME = config("DATABASE_USERNAME")
 PASSWORD = config("DATABASE_PASSWORD")
 
 #Unzip the import files
-def unzip_file(IMPORT_FILE):
+def unzip_file(IMPORT_FILE,extract_dir):
     with ZipFile(IMPORT_FILE, 'r') as zip:
         # printing all the contents of the zip file
         zip.printdir()    
         # extracting all the files
         print('Extracting all the files now...')
-        zip.extractall()
+        zip.extractall(extract_dir)
         print('Done!')
 
 if __name__ == "__main__":
@@ -35,23 +35,25 @@ if __name__ == "__main__":
     #Add command line arguments to fetch import file and database name
     parser = argparse.ArgumentParser()
     #Command line argument to fetch import file. File name is taken as 'synthetic_data.zip' if no argument is specified
-    parser.add_argument("import_file", type=str, help="Provide the import file zip",
+    parser.add_argument("--import_file", type=str, help="Provide the import file zip",
                         nargs='?', default="synthetic_data.zip", const=0)
     #Command line argument to fetch database name. Database name is taken as 'neo4j' if no argument is specified
-    parser.add_argument("database_name", type=str, help="Provide the name of the database",
+    parser.add_argument("--database_name", type=str, help="Provide the name of the database",
                         nargs='?', default="neo4j", const=0)
     args = parser.parse_args()
     IMPORT_FILE = args.import_file
     database = args.database_name
-    unzip_file(IMPORT_FILE)
+
+    #Get the directory into which the archive will be extracted
+    extract_dir = os.path.splitext(IMPORT_FILE)[0]    
+    unzip_file(IMPORT_FILE,extract_dir)
 
     #Clear the existing data in database
     clear_database = GRAPH.run(cypher.DELETE_ALL_RECORDS)
-
     encrypted = False
     trust = "TRUST_ALL_CERTIFICATES"
     driver = GraphDatabase.driver(HOSTNAME, auth=(USERNAME, PASSWORD), encrypted=encrypted, trust=trust)
-    project_dir = "synthetic_data"
+    project_dir = extract_dir
     input_yes = False
     
     #Import the data to the database
