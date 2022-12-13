@@ -15,21 +15,32 @@ from unittest.mock import patch
 import requests
 from decouple import config
 from urllib.parse import urljoin
-from datetime import date
+from datetime import datetime , timedelta, date
+from dateutil.relativedelta import relativedelta, FR
 
 URL = config("URL")
 API_KEY = config("API_KEY")
 
+#Get the url for the API endpoint that fetches user responses b/w two given dates
+responses_url = urljoin(URL, "survey/admin/QElo_filter_response")
+
+"""
+Test Data:
+ :respondent_id 1: Generous Giver ID
+ :respondent_id 2: Stingy Taker ID
+ :question_no 1: Help taken
+ :question_no 2: Help Given
+"""
 TEST_DATA = [
             #Date range whithin which all the test data is present
             ({"start_date": "1970-01-01","end_date": "1970-01-16"}, [
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"}, 
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"}, 
             ]),
 
             #Date range 1 year prior to the date where test data is stored
@@ -40,40 +51,38 @@ TEST_DATA = [
 
             #Date range covers first week of test data
             ({"start_date": "1969-12-29","end_date": "1970-01-02"},[
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"}
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"}
             ]),
 
             #Date range covers first two weeks of test data
             ({"start_date": "1969-12-29","end_date": "1970-01-09"},[
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"}
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"}
             ]),
 
             #Date range from a week prior to the dates where test data is present ,to the week succeeding the last date which has the test date
             ({"start_date": "1969-12-23","end_date": "1970-01-23"},[
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Generous Giver ID", "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
-            {"respondent_id": "Stingy Taker ID", "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
+            {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
             ])
             ]
+
 
 
 @pytest.mark.parametrize("date_range,expected_response", TEST_DATA)
 def test_data_between_dateranges(date_range,expected_response):
     "Test the response data recieved for different date ranges"
-    #Get the url for the API endpoint that fetches user responses b/w two given dates
-    responses_api = "survey/admin/QElo_filter_response"
-    responses_url = urljoin(URL, responses_api)
-
+    
     #Get the response from API
     data_date_range = date_range
     json_data = json.dumps(data_date_range)
@@ -82,7 +91,6 @@ def test_data_between_dateranges(date_range,expected_response):
     #Compare the two response recieved with the actual response
     diff = [i for i in response_data + expected_response if i not in response_data or i not in expected_response]
     result = len(diff) == 0
-    print(date_range)
 
     assert response.status_code == 200
     assert len(response_data) == len(expected_response)
