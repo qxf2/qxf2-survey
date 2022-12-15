@@ -170,3 +170,7 @@ QELO_TECHNOLOGY_BETWEEN_DATES =    "MATCH (m:Employees)-[r]->(n:Technology)\
                                     WITH DISTINCT[m.ID,n.technology_name,learnt_date] AS output\
                                     RETURN output[0] AS respondent_id,\
                                     output[1] AS technology,output[2] AS date"
+
+#Delete all the records in the Database(WARNING: Never use this query in production database)
+DELETE_ALL_RECORDS = "MATCH (n)\
+                      DETACH DELETE n"
