@@ -25,16 +25,16 @@ RESPONSES_URL = urljoin(URL, "survey/admin/QElo_filter_response")
 """
 Test Data:
  :respondent_id 1: Generous Giver ID
- :respondent_id 2: Stingy Taker ID
+ :respondent_id 2: Generous Taker ID
  :question_no 1: Help taken
  :question_no 2: Help Given
 """
 TEST_DATA = [
             #Date range whithin which all the test data is present
             ({"start_date": "1970-01-01","end_date": "1970-01-16"}, [
-            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Generous Taker"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Generous Taker"},
+            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Generous Taker"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
@@ -49,32 +49,34 @@ TEST_DATA = [
 
             #Date range covers first week of test data
             ({"start_date": "1969-12-29","end_date": "1970-01-02"},[
-            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Generous Taker"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"}
             ]),
 
             #Date range covers first two weeks of test data
             ({"start_date": "1969-12-29","end_date": "1970-01-09"},[
-            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Generous Taker"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
-            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Generous Taker"},
             {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"}
             ]),
 
             #Date range from a week prior to the dates where test data is present,
             #to the week succeeding the last date which has the test date
             ({"start_date": "1969-12-23","end_date": "1970-01-23"},[
-            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Stingy Taker"},
-            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Stingy Taker"},
+            {"respondent_id": 1, "date": "1970-01-02", "question_no": 2, "answer": "Generous Taker"},
+            {"respondent_id": 1, "date": "1970-01-09", "question_no": 2, "answer": "Generous Taker"},
+            {"respondent_id": 1, "date": "1970-01-16", "question_no": 2, "answer": "Generous Taker"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-09", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-16", "question_no": 1, "answer": "Generous Giver"},
             {"respondent_id": 2, "date": "1970-01-02", "question_no": 2, "answer": "Generous Giver"},
-            ])
-            ]
+            ]),
+
+            #Date range where the response submitted by an inactive user is stored
+            ({"start_date": "1975-01-05","end_date": "1975-01-18"},[])]
 
 @pytest.mark.parametrize("date_range,expected_response", TEST_DATA)
 def test_data_between_dateranges(date_range,expected_response):
