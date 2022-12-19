@@ -7,6 +7,7 @@ Test API response for different date ranges
     - Date range covers first week of test data
     - Date range covers first two weeks of test data
     - Date range from a week prior to the dates where test data is present ,to the week succeeding the last date which has the test date
+    - Date range that has response from an inactive user
 """
 import os
 import json
