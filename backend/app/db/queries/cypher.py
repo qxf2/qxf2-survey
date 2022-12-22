@@ -132,7 +132,7 @@ QELO_USERS = "MATCH (e:Employees)\
 QELO_RESPONSE = "MATCH (m:Employees)-[r]->(n:Employees)\
                  RETURN m.ID AS respondent_id,\
                  CASE type(r)\
-                    WHEN 'TAKEN' THEN r.helptaken\cd /d/code    
+                    WHEN 'TAKEN' THEN r.helptaken\
                     WHEN 'GIVEN' THEN r.helpgiven\
                  END AS date,\
                  CASE type(r)\
