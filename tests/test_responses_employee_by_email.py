@@ -1,8 +1,8 @@
 """
-Tests for survey API endpoint '/survey/admin/get_employee_by_email' that fetches employees by email
-Test API response for 
-    - endpoint by passing an email that exists in the database and validate the response data
-    - endpoint by passing an email that does not exist in database and validate the response
+Tests for survey API endpoint '/survey/admin/get_employee_by_email' that fetches employee details by email
+Test API response for endpoint by
+    - passing an email that exists in the database and validate the response data
+    - passing an email that does not exist in database and validate the response
    
 """
 import os
@@ -13,7 +13,7 @@ from datetime import date
 from urllib.parse import urljoin
 from decouple import config
 
-URL = "http://127.0.0.1:8000"
+URL = config("URL")
 API_KEY = config("API_KEY")
 
 #Get the url for the API endpoint that fetches user responses between two given dates
@@ -21,12 +21,13 @@ RESPONSES_URL = urljoin(URL, "survey/admin/get_employee_by_email")
 
 """
 Test Data:
- :author_name : author name
- :lastName: last name of the employee
- :firstName: firstname of the employee
- :ID : employee ID
- :email: employee email ID
- :status: status
+ :employee_details: 
+    :author_name: author name
+    :lastName: last name of the employee
+    :firstName: firstname of the employee
+    :ID: employee ID
+    :email: employee email ID
+    :status: status
 """
 TEST_DATA = [
             # passing an email that exists in the database and validate the response data
