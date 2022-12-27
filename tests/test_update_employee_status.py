@@ -28,17 +28,17 @@ UPDATE_STATUS_URL = urljoin(URL, "/survey/admin/update_employee_status")
 EMPLOYEE_INFO_URL = urljoin(URL, "/survey/admin/get_employee_by_email")
 
 TEST_DATA = [
-    #Data to set employee status to active
-    ({"email":{"email":"inactive_user@qxf2.com"},"status":{"employee_status":"Y"}},
-    #Expected response check if employee status is set to 'Y'
-    [{"employee_details": {"firstName": "Inactive", "lastName": "User", 
-    "fullName": "Inactive User", "ID": 3, "email": "inactive_user@qxf2.com","status": "Y"}}]),
-
     #Data to set employee status to inactive
-    ({"email":{"email":"inactive_user@qxf2.com"},"status":{"employee_status":"N"}},
-    #Expected response check if employee status is set to 'N'
-    [{"employee_details": {"firstName": "Inactive", "lastName": "User",
-    "fullName": "Inactive User", "ID": 3, "email": "inactive_user@qxf2.com","status": "N"}}])]
+    ({"email":{"email":"active_user@qxf2.com"},"status":{"employee_status":"N"}},
+    #Expected response to check if employee status is set to 'N'
+    [{"employee_details": {"firstName": "Active", "lastName": "User", 
+    "fullName": "Active User", "ID": 8, "email": "active_user@qxf2.com","status": "N"}}]),
+
+    #Data to set employee status to active
+    ({"email":{"email":"active_user@qxf2.com"},"status":{"employee_status":"Y"}},
+    #Expected response to check if employee status is set to 'Y'
+    [{"employee_details": {"firstName": "Active", "lastName": "User",
+    "fullName": "Active User", "ID": 8, "email": "active_user@qxf2.com","status": "Y"}}])]
 
 @pytest.mark.parametrize("update_status_data, expected_response", TEST_DATA)
 def test_update_employee_status(update_status_data,expected_response):
