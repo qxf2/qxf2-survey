@@ -49,6 +49,5 @@ def test_get_employee_by_email(email,expected_response):
     #Get the response from API
     response = requests.post(RESPONSES_URL, data = json.dumps(email), headers = {'User': API_KEY})
     response_data = response.json()
-    print ("response_data",response_data)
     #Compare the two response recieved with the actual response    
-    assert (response_data) == (expected_response)    
+    assert response_data == expected_response
