@@ -41,10 +41,8 @@ TEST_DATA = [
                 {"Name": "Smart Learner","Technology": "__TEST__JAVA"},
                 {"Name": "Smart Learner","Technology": "__TEST__RUST"}
 ]),
-
             #Date on which technology not learned
             ({"date": "1980-01-01"},[])
-
 ]
 
 @pytest.mark.parametrize("date,expected_response", TEST_DATA)
