@@ -91,11 +91,59 @@ TEST_DATA = [
 
 
             #3. Date range that covers only first  week of existing data
-            #(),
-
+            ({
+                "start_date": "1980-01-07",
+                "end_date": "1980-01-11"
+             },
+             [
+             {
+                "respondent_id": 4,
+                "technology": "__TEST__PYTHON",
+                "date": "1980-01-11"
+             },
+             {
+                "respondent_id": 4,
+                "technology": "__TEST__JAVA",
+                "date": "1980-01-11"
+             }]),
             #4. Date range that covers only first two weeks of existing data
-            #()
+            (
+            {
+                "start_date": "1980-01-07",
+                "end_date": "1980-01-18"
+            },
+            [{
+                "respondent_id": 4,
+                "technology": "__TEST__PYTHON",
+                "date": "1980-01-11"
+            },
+            {
+                "respondent_id": 4,
+                "technology": "__TEST__JAVA",
+                "date": "1980-01-11"
+            },
+            {
+                "respondent_id": 4,
+                "technology": "__TEST__PYTHON",
+                "date": "1980-01-18"
+            },
+            {
+                "respondent_id": 5,
+                "technology": "__TEST__PYTHON",
+                "date": "1980-01-18"
+            },
+            {
+                "respondent_id": 4,
+                "technology": "__TEST__JAVA",
+                "date": "1980-01-18"
+            },
+            {
+                "respondent_id": 4,
+                "technology": "__TEST__RUST",
+                "date": "1980-01-18" }
+            ])
             ]
+            
 
 @pytest.mark.parametrize("date_range,expected_response", TEST_DATA)
 def test_data_between_dateranges(date_range,expected_response):
