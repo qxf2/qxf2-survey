@@ -1,8 +1,9 @@
 """
 Tests for survey API delete endpoint '/survey/admin/employees/{id}' that deletes the employee record with id mentioned in request
 Test API response for when
-- the ID of the user to be deleted passed
-- the ID that does not exist passed
+- ID of user that exists in database is passed
+- ID of user that does not exist in database is passed
+Note: using the same ID for both scenarios here, because, after 1st scenario, the ID of the user gets deleted from the database.
 
 """
 import os
@@ -20,8 +21,8 @@ RESPONSES_URL = urljoin(URL, "/survey/admin/employees")
 
 """
 Test Data:
- existed_id : 7 
- Non-existed id : 7
+ existing_id : 7 
+ Non-existing id : 7
 """
 TEST_DATA = [
             # the ID of the user to be deleted passed
@@ -33,7 +34,7 @@ TEST_DATA = [
 
 @pytest.mark.parametrize("employee_id,expected_response,expected_status_code", TEST_DATA)
 def test_employee_delete_endpoint(employee_id,expected_response,expected_status_code):
-    "Test the response data received for employee delete endpoint with existed and non-existed employee id"    
+    "Test the response data received for the employee delete endpoint with existing and non-existing employee ID"    
     #Get the response from API
     response = requests.delete(RESPONSES_URL+ "/" + employee_id, headers = {'User': API_KEY})
     response_data = response.json()
