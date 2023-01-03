@@ -28,34 +28,53 @@ UPDATE_STATUS_URL = urljoin(URL, "/survey/admin/update_employee_status")
 EMPLOYEE_INFO_URL = urljoin(URL, "/survey/admin/get_employee_by_email")
 
 TEST_DATA = [
-    #Data to set employee status to inactive
-    ({"email":{"email":"active_user@qxf2.com"},"status":{"employee_status":"N"}},
-    #Expected response to check if employee status is set to 'N'
-    [{"employee_details": {"firstName": "Active", "lastName": "User", 
-    "fullName": "Active User", "ID": 8, "email": "active_user@qxf2.com","status": "N"}}]),
-
     #Data to set employee status to active
-    ({"email":{"email":"active_user@qxf2.com"},"status":{"employee_status":"Y"}},
+    ({"email":{"email":"user_status_to_be_updated@qxf2.com"},"status":{"employee_status":"Y"}},
     #Expected response to check if employee status is set to 'Y'
-    [{"employee_details": {"firstName": "Active", "lastName": "User",
-    "fullName": "Active User", "ID": 8, "email": "active_user@qxf2.com","status": "Y"}}])]
+    [{"employee_details": {"firstName": "Update", "lastName": "My Status", 
+    "fullName": "Update My Status", "ID": 8, "email": "user_status_to_be_updated@qxf2.com","status": "Y"}}],
+    #Response message
+    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"]),
 
-@pytest.mark.parametrize("update_status_data, expected_response", TEST_DATA)
-def test_update_employee_status(update_status_data,expected_response):
+    #Data to set employee status to inactive
+    ({"email":{"email":"user_status_to_be_updated@qxf2.com"},"status":{"employee_status":"N"}},
+    #Expected response to check if employee status is set to 'N'
+    [{"employee_details": {"firstName": "Update", "lastName": "My Status", 
+    "fullName": "Update My Status", "ID": 8, "email": "user_status_to_be_updated@qxf2.com","status": "N"}}],
+    #Response message
+    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"]),
+
+    #Data to set employee status of an user that does not exist in database
+    ({"email":{"email":"user_that_does_not_exist@qxf2.com"},"status":{"employee_status":"N"}},
+    #Expected response to check if we get appropriate error message
+    "Employee does not exist",
+    #check for appropriate response message
+    "Employee does not exist")]
+
+
+
+@pytest.mark.parametrize("update_status_data, expected_response, response_msg", TEST_DATA)
+def test_update_employee_status(update_status_data,expected_response,response_msg):
     "Used to update employee status and validate result"
     #Update employee status
     update_status = requests.post(UPDATE_STATUS_URL, data = json.dumps(update_status_data), headers = {'User': API_KEY})
     update_msg = update_status.json()
 
+    
     #Get employee details
     employee_details = get_employee_details(update_status_data)
     
-    #Compare the actual response with the expected response
-    response_diff = [i for i in employee_details + expected_response if i not in employee_details or i not in expected_response]
-    response_result = len(response_diff) == 0
-    assert update_msg == [f"Successfully updated status of employee with email {update_status_data['email']['email']}"]
-    assert len(employee_details) == len(expected_response)
-    assert response_result == True,f'There are {len(response_diff)} differences:\n{response_diff}'
+    if update_status_data['email']['email'] != "user_that_does_not_exist@qxf2.com":
+        #Compare the actual response with the expected response
+        response_diff = [i for i in employee_details + expected_response if i not in employee_details or i not in expected_response]
+        response_result = len(response_diff) == 0
+        assert len(employee_details) == len(expected_response)
+        assert response_result == True,f'There are {len(response_diff)} differences:\n{response_diff}'
+    else:
+        assert employee_details == expected_response
+    assert update_msg == response_msg
+
+
 
 def get_employee_details(update_status_data):
     "Used to get information about an employee by passing the empoyees email"
