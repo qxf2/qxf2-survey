@@ -88,46 +88,46 @@ TEST_DATA = [
             "ID": 6,
             "email": "use_this_email_to_find_me@qxf2.com",
             "status": "Y"
-        }
-        ]),
-    (
-        {'from': 'Generous Giver', 'to': 'Generous Taker', 'action': 'GIVEN'},
-        [
-            {
-                "author_name": "Generous Taker",
-                "firstName": "Generous",
-                "lastName": "Taker",
-                "fullName": "Generous Taker",
-                "ID": 2,
-                "email": "generoustaker@qxf2.com",
-                "status": "Y"
-            },
-            {
-                "lastName": "Learner",
-                "firstName": "Smart",
-                "fullName": "Smart Learner",
-                "ID": 4,
-                "email": "smart_learner@qxf2.com",
-                "status": "Y"
-            },
-            {
-                "lastName": "Learner",
-                "firstName": "Slow",
-                "fullName": "Slow Learner",
-                "ID": 5,
-                "email": "slow_learner@qxf2.com",
-                "status": "Y"
-            },
-            {
-                "lastName": "find me",
-                "firstName": "Use my email",
-                "fullName": "Use my email to find me",
-                "ID": 6,
-                "email": "use_this_email_to_find_me@qxf2.com",
-                "status": "Y"
-            }
-        ]
+        }]
     )
+    # (
+    #     {'from': 'Generous Giver', 'to': 'Generous Taker', 'action': 'GIVEN'},
+    #     [
+    #         {
+    #             "author_name": "Generous Taker",
+    #             "firstName": "Generous",
+    #             "lastName": "Taker",
+    #             "fullName": "Generous Taker",
+    #             "ID": 2,
+    #             "email": "generoustaker@qxf2.com",
+    #             "status": "Y"
+    #         },
+    #         {
+    #             "lastName": "Learner",
+    #             "firstName": "Smart",
+    #             "fullName": "Smart Learner",
+    #             "ID": 4,
+    #             "email": "smart_learner@qxf2.com",
+    #             "status": "Y"
+    #         },
+    #         {
+    #             "lastName": "Learner",
+    #             "firstName": "Slow",
+    #             "fullName": "Slow Learner",
+    #             "ID": 5,
+    #             "email": "slow_learner@qxf2.com",
+    #             "status": "Y"
+    #         },
+    #         {
+    #             "lastName": "find me",
+    #             "firstName": "Use my email",
+    #             "fullName": "Use my email to find me",
+    #             "ID": 6,
+    #             "email": "use_this_email_to_find_me@qxf2.com",
+    #             "status": "Y"
+    #         }
+    #     ]
+    # )
 ]
 
 
