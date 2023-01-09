@@ -12,8 +12,6 @@ import os
 import json
 import requests
 import pytest
-from datetime import datetime , timedelta, date
-from dateutil.relativedelta import relativedelta, FR
 from urllib.parse import urljoin
 from decouple import config
 
