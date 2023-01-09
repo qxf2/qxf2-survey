@@ -34,7 +34,9 @@ TEST_DATA = [
     [{"employee_details": {"firstName": "Update", "lastName": "My Status", 
     "fullName": "Update My Status", "ID": 8, "email": "user_status_to_be_updated@qxf2.com","status": "Y"}}],
     #Response message
-    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"]),
+    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"],
+    #User Exists
+    True),
 
     #Data to set employee status to inactive
     ({"email":{"email":"user_status_to_be_updated@qxf2.com"},"status":{"employee_status":"N"}},
@@ -42,19 +44,23 @@ TEST_DATA = [
     [{"employee_details": {"firstName": "Update", "lastName": "My Status", 
     "fullName": "Update My Status", "ID": 8, "email": "user_status_to_be_updated@qxf2.com","status": "N"}}],
     #Response message
-    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"]),
+    ["Successfully updated status of employee with email user_status_to_be_updated@qxf2.com"],
+    #User Exists
+    True),
 
     #Data to set employee status of an user that does not exist in database
     ({"email":{"email":"user_that_does_not_exist@qxf2.com"},"status":{"employee_status":"N"}},
     #Expected response to check if we get appropriate error message
     "Employee does not exist",
     #check for appropriate response message
-    "Employee does not exist")]
+    "Employee does not exist",
+    #User does not exist
+    False)]
 
 
 
-@pytest.mark.parametrize("update_status_data, expected_response, response_msg", TEST_DATA)
-def test_update_employee_status(update_status_data,expected_response,response_msg):
+@pytest.mark.parametrize("update_status_data, expected_response, response_msg, user_exists", TEST_DATA)
+def test_update_employee_status(update_status_data,expected_response,response_msg, user_exists):
     "Used to update employee status and validate result"
     #Update employee status
     update_status = requests.post(UPDATE_STATUS_URL, data = json.dumps(update_status_data), headers = {'User': API_KEY})
@@ -64,7 +70,7 @@ def test_update_employee_status(update_status_data,expected_response,response_ms
     #Get employee details
     employee_details = get_employee_details(update_status_data)
     
-    if update_status_data['email']['email'] != "user_that_does_not_exist@qxf2.com":
+    if user_exists:
         #Compare the actual response with the expected response
         response_diff = [i for i in employee_details + expected_response if i not in employee_details or i not in expected_response]
         response_result = len(response_diff) == 0
