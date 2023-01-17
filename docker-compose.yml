@@ -16,22 +16,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
+    depends_on:
+      - neo-db
+    command: sh start.sh
     ports:
       - "8000:8000"
     environment:
       - DATABASE_USERNAME=neo4j
       - DATABASE_PASSWORD=Neo4j
-      - DATABASE_HOST=bolt://localhost:7687
+      - DATABASE_HOST=bolt://neo-db:7687
       - API_KEY=qxf2
       - PROJECT_NAME=Help Survey Project
-      - CLIENT_ID=361336870916-q88h5gho5ee7p1mudg32je26th6pjlv5.apps.googleusercontent.com
       - ADMIN_EMAIL=["akkul.dn@qxf2.com"]
       - GRAPHQl_USERNAME=dummy
       - GRAPHQL_PASSWORD=dummy
       - URL=http://localhost:8000/
-    depends_on:
-      - neo-db
+
 volumes:
   data:
   logs:
