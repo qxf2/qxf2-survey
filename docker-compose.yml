@@ -8,7 +8,7 @@ services:
       - 7687:7687
     environment:
       - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
-      - NEO4J_AUTH=neo4j/Neo4j
+      - NEO4J_AUTH=${DATABASE_USERNAME}/${DATABASE_PASSWORD}
     volumes:
       - data:/data
       - logs:/logs
@@ -22,15 +22,14 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_USERNAME=neo4j
-      - DATABASE_PASSWORD=Neo4j
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_HOST=bolt://neo-db:7687
-      - API_KEY=qxf2
-      - PROJECT_NAME=Help Survey Project
-      - ADMIN_EMAIL=["akkul.dn@qxf2.com"]
+      - API_KEY=${API_KEY}
+      - PROJECT_NAME=${PROJECT_NAME}
       - GRAPHQl_USERNAME=dummy
       - GRAPHQL_PASSWORD=dummy
-      - URL=http://localhost:8000/
+      - URL=${URL}
 
 volumes:
   data:
