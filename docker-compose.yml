@@ -18,18 +18,26 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - neo-db
-    command: sh start.sh
+    entrypoint: ["sh", "-c", "sleep 30 && (nohup uvicorn main:app --host 0.0.0.0 &) && sleep 5 && cd /code/backend/db_backup_and_restore && python neo4j_restore.py && cd /code/frontend && tail -f /dev/null"]
     ports:
       - "8000:8000"
+      - "3000:3000/tcp"
     environment:
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_HOST=bolt://neo-db:7687
       - API_KEY=${API_KEY}
       - PROJECT_NAME=${PROJECT_NAME}
-      - GRAPHQl_USERNAME=dummy
-      - GRAPHQL_PASSWORD=dummy
+      - CLIENT_ID=${CLIENT_ID}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - GRAPHQl_USERNAME=${GRAPHQl_USERNAME}
+      - GRAPHQL_PASSWORD=${GRAPHQL_PASSWORD}
       - URL=${URL}
+      - REACT_APP_API_KEY=${REACT_APP_API_KEY}
+      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+    volumes:
+      - ./backend:/code/backend
+      - ./frontend:/code/frontend
 
 volumes:
   data:
