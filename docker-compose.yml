@@ -35,6 +35,9 @@ services:
       - URL=${URL}
       - REACT_APP_API_KEY=${REACT_APP_API_KEY}
       - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+    volumes:
+      - ./backend:/code/backend
+      - ./frontend:/code/frontend
 
 volumes:
   data:
