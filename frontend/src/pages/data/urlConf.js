@@ -1,3 +1,2 @@
-const url = "https://survey-backend.qxf2.com"
-
+const url = process.env.REACT_APP_BACKEND_URL;
 export default url;
