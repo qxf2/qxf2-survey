@@ -13,12 +13,9 @@ services:
       - data:/data
       - logs:/logs
   python-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: akkul/survey_app:1.0
     depends_on:
       - neo-db
-    entrypoint: ["sh", "-c", "sleep 30 && (nohup uvicorn main:app --host 0.0.0.0 &) && sleep 5 && cd /code/backend/db_backup_and_restore && python neo4j_restore.py && cd /code/frontend && npm install && npm start"]  
     ports:
       - "8000:8000"
       - "3000:3000/tcp"
