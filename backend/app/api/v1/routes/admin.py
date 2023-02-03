@@ -26,7 +26,7 @@ import requests as req
 router = APIRouter()
 GRAPH = db.auth()
 
-BASE_URL = 'https://qxf2-employees.qxf2.com/graphql'
+BASE_URL = config("GRAPHQL_BASE_URL")
 
 def authenticate():
     "Return an authenticate code"
