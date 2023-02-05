@@ -13,9 +13,12 @@ services:
       - data:/data
       - logs:/logs
   python-app:
-    image: qxf2rohand/qxf2-survey-app:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - neo-db
+    entrypoint: ["sh", "-c", "sleep 30 && (nohup uvicorn main:app --host 0.0.0.0 --reload &) && sleep 5 && cd /code/backend/db_backup_and_restore && python neo4j_restore.py && sleep 5 && cd /code/qxf2-employees && echo 'JWT_SECRET_KEY=\"$API_KEY\"' > employees/secret.py && echo 'USERS = {\"$GRAPHQl_USERNAME\":\"$GRAPHQL_PASSWORD\"}' > employees/allowed_users.py && (nohup python run.py &) && sleep 5 && cd /code/frontend && rm -rf ./node_modules && ln -s /code/node_packages/node_modules/ . && npm start"]
     ports:
       - "8000:8000"
       - "3000:3000/tcp"
@@ -39,7 +42,9 @@ services:
     tty: true
     volumes:
       - ./backend:/code/backend
-      - ./frontend:/code/frontend
+      - ./frontend/public:/code/frontend/public
+      - ./frontend/src:/code/frontend/src
+      - ./frontend/package.json:/code/frontend/package.json
 volumes:
   data:
   logs:

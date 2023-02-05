@@ -6,9 +6,11 @@ WORKDIR /code/backend/app
 
 # Add and install requirements
 ADD ./backend/requirements.txt /code/backend/requirements.txt
+ADD ./frontend/package.json ./frontend/package-lock.json /code/node_packages/
 RUN apt update
 RUN pip install -r /code/backend/requirements.txt
 RUN apt install -y nodejs npm
+RUN cd /code/node_packages && npm install
 
 # Clone the qxf2-employees repository
 RUN cd /code && git clone https://github.com/akkuldn/qxf2-employees.git
@@ -24,12 +26,6 @@ RUN apt install sqlite3
 
 # Create the SQLite database and import data
 RUN  timeout 10 sqlite3 data/employee_database.sqlite3 -cmd '.mode csv' -cmd '.import data/dummy_data.csv employee'
-
-# Update the secret file
-RUN echo "JWT_SECRET_KEY='qxf2'" > employees/secret.py
-
-# Add the allowed users file
-RUN echo "USERS = {'dummy':'dummy', 'dummy1':'dummy1'}" > employees/allowed_users.py
 
 # Reset working directory
 WORKDIR /code/backend/app
