@@ -52,7 +52,7 @@ const resolvers = {
     },
     Mutation: {
       auth: (_, { username, password }) => {
-        if (username === process.env.GRAPHQL_USERNAME && password === process.env.GRAPHQL_PASSWORD) {
+        if (username === process.env.GRAPHQl_USERNAME && password === process.env.GRAPHQL_PASSWORD) {
           return {
             accessToken: process.env.ACCESS_TOKEN,
             refreshToken: process.env.REFRESH_TOKEN
