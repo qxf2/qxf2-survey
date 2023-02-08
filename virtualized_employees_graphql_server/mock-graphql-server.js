@@ -98,7 +98,7 @@ const server = new ApolloServer({
         const token = req.headers.authorization || '';
         return { token };
       },
-      listen: { port: 4000 }
+      listen: { port: 5000 },
     });
   
 console.log(`🚀 Server listening at: ${url}`);
