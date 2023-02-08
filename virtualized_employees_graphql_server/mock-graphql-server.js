@@ -92,13 +92,14 @@ const server = new ApolloServer({
       preserveResolvers: true,
     }),
   });
+
+const server_port = 5000
+const { url } = startStandaloneServer(server, {
+    context: async ({ req, res }) => {
+      const token = req.headers.authorization || '';
+      return { token };
+    },
+    listen: { port: server_port },
+  });
   
-  const { url } = startStandaloneServer(server, {
-      context: async ({ req, res }) => {
-        const token = req.headers.authorization || '';
-        return { token };
-      },
-      listen: { port: 5000 },
-    });
-  
-console.log(`🚀 Server listening at: ${url}`);
+console.log(`🚀 Server listening at Port: ${server_port}`);
