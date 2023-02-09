@@ -79,10 +79,6 @@ const mocks = {
   EmployeesConnection: () => ({
     edges: employees.map(employee => ({ node: employee }))
   }),
-  Auth: () => ({
-    accessToken: 'eyJ0f',
-    refreshToken: 'eyJ0e'
-  })
 };
 
 const server = new ApolloServer({
