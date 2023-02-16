@@ -2,13 +2,13 @@ const { ApolloServer } = require('@apollo/server');
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const { addMocksToSchema } = require ('@graphql-tools/mock');
 const { makeExecutableSchema } =  require('@graphql-tools/schema');
+const { GraphQLError } = require('graphql');
 const fs = require('fs');
 require('dotenv').config();
 
 const typeDefs = `#graphql
   type Query {
-    resolved: String
-    allEmployees: EmployeesConnection
+    allEmployees: Employees
   }
   
   type Mutation {
@@ -20,9 +20,8 @@ const typeDefs = `#graphql
     refreshToken: String
   }
 
-  type EmployeesConnection {
+  type Employees {
     edges: [EmployeeEdge]
-    node: [Employee]
   }
 
   type EmployeeEdge {
@@ -42,12 +41,14 @@ const typeDefs = `#graphql
 
 const resolvers = {
     Query: {
-      resolved: () => 'Resolved',
       allEmployees: (root, args, context) => {
         if (context.token != `Bearer ${process.env.ACCESS_TOKEN}`) {
-          throw new Error('Unauthorized');
-        }
-        return employees;
+          throw new GraphQLError("object of type 'AuthInfoField' has no len()", {
+            extensions: {
+              code: 'Unauthorized'
+            },
+          });
+      }
       },
     },
     Mutation: {
@@ -75,8 +76,7 @@ fs.readFile('./employee-data.json', 'utf-8', (err, data) => {
 });
 
 const mocks = {
-  Employee: () => employees,
-  EmployeesConnection: () => ({
+  Employees: () => ({
     edges: employees.map(employee => ({ node: employee }))
   }),
 };
@@ -87,9 +87,10 @@ const server = new ApolloServer({
       mocks,
       preserveResolvers: true,
     }),
+    includeStacktraceInErrorResponses: false
   });
 
-const server_port = 5000
+const server_port = 4000
 const { url } = startStandaloneServer(server, {
     context: async ({ req, res }) => {
       const token = req.headers.authorization || '';
