@@ -1,0 +1,47 @@
+version: '3'
+services:
+  neo-db:
+    image: neo4j:4.4-community
+    ports:
+      - 7474:7474
+      - 7473:7473
+      - 7687:7687
+    environment:
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_AUTH=${DATABASE_USERNAME}/${DATABASE_PASSWORD}
+    volumes:
+      - data:/data
+      - logs:/logs
+  python-app:
+    image: qxf2rohand/qxf2-survey-app:1.0
+    depends_on:
+      - neo-db
+    ports:
+      - "8000:8000"
+      - "3000:3000/tcp"
+      - "5000:5000"
+    environment:
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_HOST=bolt://neo-db:7687
+      - API_KEY=${API_KEY}
+      - PROJECT_NAME=${PROJECT_NAME}
+      - CLIENT_ID=${CLIENT_ID}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - GRAPHQL_BASE_URL=${GRAPHQL_BASE_URL}
+      - GRAPHQl_USERNAME=${GRAPHQl_USERNAME}
+      - GRAPHQL_PASSWORD=${GRAPHQL_PASSWORD}
+      - URL=${URL}
+      - REACT_APP_API_KEY=${REACT_APP_API_KEY}
+      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./backend:/code/backend
+      - ./frontend/public:/code/frontend/public
+      - ./frontend/src:/code/frontend/src
+      - ./frontend/package.json:/code/frontend/package.json
+volumes:
+  data:
+  logs:
