@@ -1,0 +1,74 @@
+[
+    {
+        "email": "generoustaker@qxf2.com",
+        "employeeId": "2",
+        "dateJoined": "01-Apr-1970",
+        "isActive": "Y",
+        "blogAuthorName": "user1",
+        "firstname": "Generous",
+        "lastname": "Taker"
+    },
+    {
+        "email": "inactive_user@qxf2.com",
+        "employeeId": "3",
+        "dateJoined": "02-Mar-1969",
+        "isActive": "N",
+        "blogAuthorName": "user2",
+        "firstname": "Inactive",
+        "lastname": "User"
+    },
+    {
+        "email": "slow_learner@qxf2.com",
+        "employeeId": "5",
+        "dateJoined": "25-Feb-1977",
+        "isActive": "Y",
+        "blogAuthorName": "user3",
+        "firstname": "Slow",
+        "lastname": "Learner"
+    },
+    {
+        "email": "smart_learner@qxf2.com",
+        "employeeId": "4",
+        "dateJoined": "04-Sept-1976",
+        "isActive": "Y",
+        "blogAuthorName": "user4",
+        "firstname": "Smart",
+        "lastname": "Learner"
+    },
+    {
+        "email": "use_this_email_to_find_me@qxf2.com",
+        "employeeId": "6",
+        "dateJoined": "03-Aug-1980",
+        "isActive": "Y",
+        "blogAuthorName": "user5",
+        "firstname": "Use my email",
+        "lastname": "find me"
+    },
+    {
+        "email": "user_to_be_deleted@qxf2.com",
+        "employeeId": "7",
+        "dateJoined": "28-July-1975",
+        "isActive": "N",
+        "blogAuthorName": "user6",
+        "firstname": "Use my ID",
+        "lastname": "Delete me"
+    },
+    {
+        "email": "generousgiver@qxf2.com",
+        "employeeId": "1",
+        "dateJoined": "03-Dec-1980",
+        "isActive": "Y",
+        "blogAuthorName": "user7",
+        "firstname": "Generous",
+        "lastname": "Giver"
+    },
+    {
+        "email": "user_status_to_be_updated@qxf2.com",
+        "employeeId": "8",
+        "dateJoined": "15-Aug-1986",
+        "isActive": "N",
+        "blogAuthorName": "user8",
+        "firstname": "Update",
+        "lastname": "My Status"
+    }
+]

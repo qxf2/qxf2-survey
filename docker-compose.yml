@@ -13,7 +13,7 @@ services:
       - data:/data
       - logs:/logs
   python-app:
-    image: qxf2rohand/qxf2-survey-app:1.0
+    image: qxf2rohand/qxf2-survey-app:1.1
     depends_on:
       - neo-db
     ports:
@@ -35,6 +35,8 @@ services:
       - REACT_APP_API_KEY=${REACT_APP_API_KEY}
       - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
       - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - REFRESH_TOKEN=${REFRESH_TOKEN}
     stdin_open: true
     tty: true
     volumes:
@@ -42,6 +44,9 @@ services:
       - ./frontend/public:/code/frontend/public
       - ./frontend/src:/code/frontend/src
       - ./frontend/package.json:/code/frontend/package.json
+      - ./virtualized_employees_graphql_server/mock-graphql-server.js:/code/virtualized_employees_graphql_server/mock-graphql-server.js
+      - ./virtualized_employees_graphql_server/employee-data.json:/code/virtualized_employees_graphql_server/employee-data.json
+      - ./virtualized_employees_graphql_server/package.json:/code/virtualized_employees_graphql_server/package.json
 volumes:
   data:
   logs:
