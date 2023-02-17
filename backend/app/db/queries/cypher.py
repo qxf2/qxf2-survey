@@ -37,7 +37,8 @@ GET_USER_NAME = "MATCH (e:Employees)\
                  RETURN e.fullName, e.email"
 
 GET_USER_ID = "MATCH (e:Employees)\
-               RETURN e.ID, e.email"
+               RETURN e.ID, e.email\
+               ORDER BY e.ID ASC"
 
 GET_ACTIVE_USER_ID = "MATCH (e:Employees)\
                       WHERE e.status='Y'\
