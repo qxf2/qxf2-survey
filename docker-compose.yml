@@ -13,12 +13,9 @@ services:
       - data:/data
       - logs:/logs
   python-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: qxf2rohand/qxf2-survey-app:1.2
     depends_on:
       - neo-db
-    entrypoint: ["sh", "-c", "wait-for-it -t 180 -s bolt://neo-db:7687  -- echo 'Neo4j database is up' && (nohup uvicorn main:app --host 0.0.0.0 --reload &) && sleep 5 && cd /code/backend/db_backup_and_restore && python neo4j_restore.py && sleep 5 && cd /code/virtualized_employees_graphql_server && rm -rf ./node_modules && ln -s /code/mock_server_node_packages/node_modules/ . && (nohup node mock-graphql-server.js &) && cd /code/frontend && rm -rf ./node_modules && ln -s /code/react_node_packages/node_modules/ . && npm start"]
     ports:
       - "8000:8000"
       - "3000:3000/tcp"
