@@ -11,6 +11,11 @@ This is a survey app designed to help keep track of the interactions by employee
 6. You can modify the values of variables in the `.env` as per the instructions given in the `.env` file
 7. Run the command `docker-compose up`. This would setup the docker containers, it would usually take 1-2 minutes.
 8. Once the Docker containers are configured, you will receive a message that reads "Compiled successfully!" 
+9. *Note*: Incase you change the database password in your .env file after spinning up the container for the first time, you need to rebuild the container and clear the volume. This is because `NEO4J_AUTH` has no effect because that database already has a password. You can use the following docker command
+```
+ docker-compose down --volumes && docker-compose build --no-cache && docker-compose up
+```
+
 
 ### Usage
 Open a browser and visit the following links.
