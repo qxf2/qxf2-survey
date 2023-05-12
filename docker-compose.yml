@@ -13,7 +13,7 @@ services:
       - data:/data
       - logs:/logs
   python-app:
-    image: qxf2rohand/qxf2-survey-app:1.1
+    image: qxf2rohand/qxf2-survey-app:1.2
     depends_on:
       - neo-db
     ports:
