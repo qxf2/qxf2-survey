@@ -19,7 +19,7 @@ services:
     ports:
       - "8000:8000"
       - "3000:3000/tcp"
-      - "5000:5000"
+      - "4000:4000"
     environment:
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
