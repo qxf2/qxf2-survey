@@ -4,4 +4,6 @@ allow_origins = ["http://test-survey.qxf2.com",
                  "http://www.survey.qxf2.com",
                  "http://survey.qxf2.com",
                  "https://www.survey.qxf2.com",
-                 "https://survey.qxf2.com"]
+                 "https://survey.qxf2.com",
+                 "https://survey-new.qxf2.com",
+                 "https://www.survey-new.qxf2.com"]
