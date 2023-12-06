@@ -152,8 +152,14 @@ def technologies_learnt_on_week(fetched_date: schemas.FetchTechnology,
                                 authenticated: bool = Depends(security.validate_request)):
     "returns all the technologies learnt in the week for a given date"
     date = fetched_date.date
-    monday = date - timedelta(days=date.weekday())
-    friday = (date + relativedelta(weekday=FR(0))).strftime("%Y-%m-%d")
+    date_format = "%Y-%m-%d"
+    try:
+        datetime.strptime(str(date), date_format)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Please use YYYY-MM-DD format for start_date and end_date")
+    tech_date = datetime.strptime(date, date_format)
+    monday = tech_date - timedelta(days=tech_date.weekday())
+    friday = (tech_date + relativedelta(weekday=FR(0))).strftime("%Y-%m-%d")
     technologies = GRAPH.run(cypher.TECHNOLOGIES_LEARNT_ON_PARTICULAR_WEEK,
                              parameters={"date_monday":str(monday),
                              "date_friday":str(friday)}).data()
@@ -166,6 +172,13 @@ def qelo_get_response_between_given_dates(fetched_date: schemas.FetchResponses,
 
     start_date = fetched_date.start_date
     end_date = fetched_date.end_date
+    date_format = "%Y-%m-%d"
+    try:
+        datetime.strptime(str(start_date), date_format)
+        datetime.strptime(str(end_date), date_format)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Please use YYYY-MM-DD format for start_date and end_date")
+
     qelo_response = GRAPH.run(cypher.QELO_RESPONSE_BETWEEN_DATES,
                               parameters={"start_date":str(start_date),
                               "end_date":str(end_date)}).data()
