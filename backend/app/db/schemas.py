@@ -3,7 +3,7 @@ This module models the api request bodies
 """
 
 from typing import Dict
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import datetime
 
 class EmployeeData(BaseModel):
@@ -17,12 +17,12 @@ class EmployeeRegistration(BaseModel):
 
 class FetchTechnology(BaseModel):
     "request body"
-    date: datetime.date
+    date:str = Field(example="1980-01-25")
 
 class FetchResponses(BaseModel):
     "request body"
-    start_date: datetime.date
-    end_date: datetime.date
+    start_date: str = Field(example="1970-01-01")
+    end_date: str = Field(example="2023-01-01")
 
 class EmployeeEmail(BaseModel):
     "request body"
