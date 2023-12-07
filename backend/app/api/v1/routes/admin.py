@@ -62,11 +62,11 @@ def get_new_employee_data(user: schemas.EmployeeRegistration,\
     last_user_id = get_user_id(email=None)
     new_employee = Node("Employees",
                          ID=int(last_user_id)+1,
-                         firstName=emp_data["firstName"],
-                         lastName=emp_data["lastName"],
-                         email=emp_data["email"],
-                         fullName=emp_data["fullName"],
-                         status=emp_data["status"])
+                         firstName=emp_data.firstName,
+                         lastName=emp_data.lastName,
+                         email=emp_data.email,
+                         fullName=emp_data.fullName,
+                         status=emp_data.status)
     try:
         GRAPH.create(new_employee)
         return {"msg": "Successfully registered new employee"}
