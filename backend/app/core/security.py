@@ -10,14 +10,14 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from core import config
 from core.messages import AUTH_REQ, NO_API_KEY
 
-api_key = APIKeyHeader(name="User", auto_error=True)
+api_key = APIKeyHeader(name="User", auto_error=False)
 
 
 def validate_request(header: Optional[str] = Security(api_key)) -> bool:
     "Validate the api request and return the appropriate message"
     if header is None:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail=NO_API_KEY, headers={}
+            status_code=HTTP_401_UNAUTHORIZED, detail=NO_API_KEY, headers={}
         )
     if not secrets.compare_digest(header, str(config.API_KEY)):
         raise HTTPException(
