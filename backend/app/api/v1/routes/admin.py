@@ -191,6 +191,12 @@ def qelo_get_technology_between_given_dates(fetched_date: schemas.FetchResponses
 
     start_date = fetched_date.start_date
     end_date = fetched_date.end_date
+    date_format = "%Y-%m-%d"
+    try:
+        datetime.strptime(str(start_date), date_format)
+        datetime.strptime(str(end_date), date_format)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Please use YYYY-MM-DD format for start_date and end_date")
     qelo_technology = GRAPH.run(cypher.QELO_TECHNOLOGY_BETWEEN_DATES,
                                 parameters={"start_date":str(start_date),
                                 "end_date":str(end_date)}).data()
