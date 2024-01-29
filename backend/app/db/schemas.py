@@ -3,17 +3,26 @@ This module models the api request bodies
 """
 
 from typing import Dict
-from pydantic import BaseModel, Field
+
+from pydantic import BaseModel, Field, StrictStr
 import datetime
 
 class EmployeeData(BaseModel):
     "request body"
     data: Dict
 
+class EmployeeRegsitrationData(BaseModel):
+    """Model for the data inside the request body."""
+    firstName: StrictStr
+    lastName: StrictStr
+    email:  StrictStr
+    fullName: StrictStr
+    status: StrictStr
+
 
 class EmployeeRegistration(BaseModel):
     "request body"
-    data: Dict
+    data: EmployeeRegsitrationData
 
 class FetchTechnology(BaseModel):
     "request body"
